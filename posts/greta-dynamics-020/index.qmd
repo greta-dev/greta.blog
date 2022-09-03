@@ -1,0 +1,6 @@
+---
+title: "greta.dynamics 0.2.0"
+author: "Nicholas Tierney"
+date: "2022-09-06"
+categories: [greta.gp]
+---
