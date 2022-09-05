@@ -1,0 +1,32 @@
+---
+title: "greta version 0.5.0"
+author: "Nicholas Tierney"
+date: "2022-09-29"
+categories: [greta, tf2]
+---
+
+We are happy to say that greta version 0.5.0 is on CRAN!
+
+This particular release has been a long time in the making, as it uses tensorflow version 2. We'll refer to Tensor Flow as TF hereafter.  The overall impact on `greta` users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward.
+
+## TF version 2
+
+Google released TF version 2 in ... 2019. This was a big change in the user interface to TF, as it changed from what was called "graph mode" to "eager mode".
+Briefly, eager mode is ..
+
+## What changed for greta
+
+A lot. And also, not much. Internally we had to change a very large amount of 
+the code insidie of greta, as changing from graph based execution to eager
+execution meant that 
+
+## New features in greta
+
+## Upcoming features in greta
+
+Now that we've implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here's a list of some of the new features you can expect in the future
+
+- No U-turn Sampler
+- Faster Tuning
+- Marginalisation interface
+- 

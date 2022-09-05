@@ -3,14 +3,16 @@ title: "greta.gp 0.2.0"
 author: "Nicholas Tierney"
 date: "2022-09-06"
 categories: [greta.gp]
+image: "bw-film-gp.jpg"
 ---
+
+![Bridges in Perth, film, Nick Tierney](bw-film-gp.jpg){fig-alt="Parabolic curving bridges in Perth, Australia"}
 
 We are excited to announce that `greta.gp` version 0.2.0 is now on CRAN!
 
 `greta.gp` provides a syntax to create and combine Gaussian process kernels in `greta`. You can then them to define either full rank or sparse Gaussian processes.
 
 Here's a brief example:
-
 
 ```{r}
 #| label: par

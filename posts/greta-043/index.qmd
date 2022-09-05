@@ -1,0 +1,8 @@
+---
+title: "greta version 0.4.3"
+author: "Nicholas Tierney"
+date: "2022-09-12"
+categories: [greta]
+---
+
+We are happy to say that greta version 0.4.3 is now on CRAN
