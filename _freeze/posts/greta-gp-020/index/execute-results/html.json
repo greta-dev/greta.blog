@@ -1,0 +1,16 @@
+{
+  "hash": "3bae40adeadfc107753c9597111e4aad",
+  "result": {
+    "markdown": "---\ntitle: \"greta.gp 0.2.0\"\nauthor: \"Nicholas Tierney\"\ndate: \"2022-09-06\"\ncategories: [greta.gp]\nimage: \"bw-film-gp.jpg\"\n---\n\n\n![Bridges in Perth, film, Nick Tierney](bw-film-gp.jpg){fig-alt=\"Parabolic curving bridges in Perth, Australia\"}\n\nWe are excited to announce that `greta.gp` version 0.2.0 is now on CRAN!\n\n`greta.gp` provides a syntax to create and combine Gaussian process kernels in `greta`. You can then them to define either full rank or sparse Gaussian processes.\n\nHere's a brief example:\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# simulate data\nx <- runif(20, 0, 10)\ny <- sin(x) + rnorm(20, 0, 0.5)\nx_plot <- seq(-1, 11, length.out = 200)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(greta)\nlibrary(greta.gp)\n# hyperparameters\nrbf_var <- lognormal(0, 1)\n```\n\n```{.r .cell-code}\nrbf_len <- lognormal(0, 1)\nobs_sd <- lognormal(0, 1)\n# kernel & GP\nkernel <- rbf(rbf_len, rbf_var) + bias(1)\nf <- gp(x, kernel)\n# likelihood\ndistribution(y) <- normal(f, obs_sd)\n# prediction\nf_plot <- project(f, x_plot)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# fit the model by Hamiltonian Monte Carlo\nm <- model(f_plot)\ndraws <- mcmc(m, n_samples = 250)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# plot 200 posterior samples\nplot(\n  y ~ x,\n  pch = 16,\n  col = grey(0.4),\n  xlim = c(0, 10),\n  ylim = c(-2.5, 2.5)\n)\nfor (i in 1:200) {\n  lines(\n    draws[[1]][i, ] ~ x_plot,\n    lwd = 2,\n    col = rgb(0.7, 0.1, 0.4, 0.1)\n  )\n}\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/plotting-1.png){width=2000}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,3 +1,187 @@
 /*-- scss:defaults --*/
-// Base document colors
-$primary: #A379CC;
+
+// ===========================================================================
+// greta brand palette — shared with greta.pkgdown
+// ===========================================================================
+$greta-purple:       #a379cc;
+$greta-purple-deep:  #8960b3;
+$greta-purple-light: #b797d7;
+$greta-code-bg:      #f4f0f9;
+
+$primary:   $greta-purple;
+$link-color: $greta-purple-deep;
+$link-hover-color: darken($greta-purple-deep, 10%);
+
+// Typography — Roboto-preferring, self-contained system stack (no CDN fetch),
+// falling back to clean geometric sans-serifs that echo greta's Roboto look.
+$font-family-sans-serif: "Roboto", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+$font-family-monospace: "Roboto Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+$headings-font-weight: 500;
+
+// Tinted code blocks, matching the pkgdown template.
+$code-bg: $greta-code-bg;
+$code-color: $greta-purple-deep;
+
+// Softer, more modern rounding on cards, buttons and code.
+$border-radius: 0.6rem;
+$border-radius-lg: 0.9rem;
+
+/*-- scss:rules --*/
+
+// ===========================================================================
+// Navbar
+// ===========================================================================
+.navbar {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-brand img {
+  height: 30px;
+  width: auto;
+}
+
+// Neutral grey menu items, like greta.pkgdown, with a purple hover.
+.navbar .navbar-nav .nav-link {
+  color: rgba(0, 0, 0, 0.65);
+
+  &:hover,
+  &:focus {
+    color: $greta-purple-deep;
+  }
+
+  &.active {
+    color: rgba(0, 0, 0, 0.9);
+  }
+}
+
+// ===========================================================================
+// Hero / title banner
+// ===========================================================================
+// The purple title-block banner gets a subtle DAG-network motif drawn from
+// greta's logo, plus a gentle gradient for depth.
+.quarto-title-block .quarto-title-banner {
+  background-color: $greta-purple;
+  background-image: linear-gradient(135deg, $greta-purple 0%, $greta-purple-deep 100%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.quarto-title-banner .title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.quarto-title-banner .subtitle {
+  font-size: 1.15rem;
+  opacity: 0.92;
+}
+
+// ===========================================================================
+// Post listing — playful modern cards
+// ===========================================================================
+.quarto-listing {
+  margin-top: 1.5rem;
+}
+
+// Grid cards
+.quarto-grid-item.card {
+  border: 1px solid rgba($greta-purple, 0.18);
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba($greta-purple-deep, 0.18);
+    border-color: rgba($greta-purple, 0.45);
+  }
+
+  .card-title {
+    color: $greta-purple-deep;
+    font-weight: 600;
+  }
+
+  .listing-date,
+  .listing-author,
+  .card-attribution {
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 0.85rem;
+  }
+}
+
+// Category pills
+.quarto-category,
+.listing-category .category {
+  background-color: $greta-code-bg;
+  color: $greta-purple-deep;
+  border: 1px solid rgba($greta-purple, 0.25);
+  border-radius: 2rem;
+  padding: 0.1rem 0.65rem;
+  font-size: 0.75rem;
+  text-transform: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background-color: $greta-purple;
+    color: #fff;
+  }
+}
+
+// Default (list) listing rows
+.quarto-listing-default .listing-item {
+  border-bottom: 1px solid rgba($greta-purple, 0.15);
+  padding-bottom: 1rem;
+
+  a {
+    color: $greta-purple-deep;
+  }
+}
+
+// ===========================================================================
+// Body content
+// ===========================================================================
+h1,
+h2,
+h3 {
+  color: $greta-purple-deep;
+}
+
+// Active table-of-contents entry in greta purple.
+#TOC .active,
+.sidebar nav[role="doc-toc"] ul > li > a.active {
+  color: $greta-purple-deep;
+  border-left-color: $greta-purple;
+}
+
+a {
+  text-decoration-color: rgba($greta-purple, 0.4);
+  text-underline-offset: 0.15em;
+}
+
+// Inline code and code blocks keep the tinted greta background.
+code:not(.sourceCode),
+pre.sourceCode,
+div.sourceCode {
+  background-color: $greta-code-bg;
+  border-radius: $border-radius;
+}
+
+// Blockquotes get a purple accent bar.
+blockquote {
+  border-left: 4px solid $greta-purple;
+  background-color: rgba($greta-purple, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 0 $border-radius $border-radius 0;
+}
+
+// ===========================================================================
+// Footer
+// ===========================================================================
+.nav-footer {
+  border-top: 1px solid rgba($greta-purple, 0.15);
+  font-size: 0.9rem;
+}

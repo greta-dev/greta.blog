@@ -1,0 +1,212 @@
+---
+title: "greta 0.6.0 is back on CRAN"
+author: "Nicholas Tierney"
+date: "2026-07-17"
+categories: [greta, release]
+draft: true
+description: &desc |
+  greta 0.6.0 returns to CRAN after being archived in late 2025, with a
+  ground-up rebuild of the Python installation experience: uv-managed and
+  automatic, offline support, and flexible backends via greta_set_python()
+  and greta_set_deps().
+
+open-graph:
+  description: *desc
+twitter-card:
+  description: *desc
+---
+
+::: {.callout-note title="A note on AI assistance"}
+We are now using Claude Code, with the Opus and Fable models, to help resolve
+some long-standing issues in greta. We also used Claude Code to draft this post
+from the 0.6.0 `NEWS` file. It was then edited by greta's maintainer, Nick
+Tierney.
+:::
+
+::: lead
+**We are delighted to say that greta 0.6.0 is back on CRAN.**
+:::
+
+```r
+install.packages("greta")
+```
+
+greta was archived from CRAN in late 2025. The short story is that greta was
+doing two things CRAN does not allow: it used more than two cores by default,
+and it could reach out to install TensorFlow and TensorFlow Probability onto the
+machine running the checks. Both come back to the same underlying challenge,
+managing greta's Python dependencies well.
+
+So we rebuilt that part of greta from the ground up. Installation should now
+*just work*, even offline, and you have far more control over which Python
+backend greta uses. This post walks through what changed and what it means for
+you. You can read the full list of changes in the
+[release notes](https://github.com/greta-dev/greta/blob/main/NEWS.md).
+
+## The short version
+
+- greta 0.6.0 is on CRAN again.
+- The Python dependencies are now installed automatically via
+  [uv](https://docs.astral.sh/uv/) on first use. For most people,
+  `install_greta_deps()` is no longer a required step.
+- It works offline. Once uv's cache is populated, greta can start up without an
+  internet connection.
+- You can choose your Python backend, persistently, with `greta_set_python()`,
+  and pin your dependency versions with `greta_set_deps()`.
+- MCMC now defaults to two cores and two chains, which plays nicely with CRAN
+  and with laptops.
+- Plenty of other bug fixes and quality-of-life improvements.
+
+Because greta is back, its three extension packages,
+[greta.gp](https://github.com/greta-dev/greta.gp),
+[greta.gam](https://github.com/greta-dev/greta.gam), and
+[greta.dynamics](https://github.com/greta-dev/greta.dynamics), can return to
+CRAN too.
+
+## Why greta was archived
+
+greta sits on top of [TensorFlow](https://www.tensorflow.org/) and
+[TensorFlow Probability](https://www.tensorflow.org/probability), which are
+Python libraries. You can think of them a little like highly optimised linear
+algebra engines: they are a big part of what makes greta fast and expressive,
+and they are how greta fits MCMC efficiently. But they also mean greta has to
+manage a Python installation, and getting the right combination of package
+versions in place has been a genuinely hard problem.
+
+Previously, we leaned on conda and a carefully curated table of "known good"
+version combinations. The `install_greta_deps()` function did a good job of
+setting all of this up, most of the time. When it worked, it was lovely. When it
+did not, installation could get complicated quickly.
+
+More recently, [reticulate](https://rstudio.github.io/reticulate/) gained a fast
+new environment manager built on uv, which changes what a good installation
+experience can look like. Rebuilding greta's installation around it is the heart
+of this release.
+
+## Installation that just works
+
+The headline change is that greta now installs TensorFlow and TensorFlow
+Probability automatically via uv the first time you use greta. You no longer
+need to run `install_greta_deps()` as a separate step before you can build a
+model.
+
+Just as importantly, greta is now flexible about *which* Python environment it
+uses. Instead of always forcing one managed environment, greta resolves its
+backend in a sensible order: it respects a user-set `RETICULATE_PYTHON`, then a
+stored greta preference, then an existing `greta-env-tf2` conda environment, and
+otherwise falls back to the managed uv environment. You get convenience by
+default, without giving up control.
+
+### Offline support
+
+This one is quietly a big deal. The managed uv backend now works **without an
+internet connection**. Once reticulate's uv cache is populated, greta enables
+uv's offline mode so it can start up on a plane, behind a locked-down corporate
+firewall, or on an air-gapped compute node. If you want to be explicit, you can
+set `UV_OFFLINE=1` to force offline resolution or `UV_OFFLINE=0` to force
+online.
+
+### Choosing your backend
+
+Two new functions put you in the driver's seat:
+
+- `greta_set_python()` persistently chooses which Python environment greta uses.
+  You can pick the managed uv environment (`backend = "uv"`, the default), a
+  conda environment (`backend = "conda"`), or a specific Python interpreter
+  (`backend = "path"`). It reports the stored preference, warns you if
+  `RETICULATE_PYTHON` will take precedence, and shows what greta will resolve to
+  on its next load. Use `greta_reset_python()` to clear it.
+- `greta_set_deps()` persistently pins which TensorFlow, TensorFlow Probability,
+  and Python versions greta should use. The managed environment installs them on
+  next load. Clear them with `greta_remove("deps")`.
+
+If you point greta at a specific path, `greta_set_python("path", path = ...)`
+happily accepts either a Python binary or an environment directory (a virtualenv
+or conda prefix), which makes pre-installed and offline setups much easier to
+wire up.
+
+### A tidier set of helpers
+
+Along the way we consolidated a scattering of removal and reinstall helpers.
+`greta_remove()` is now the single front door for cleaning up. Via one `what`
+argument it can remove the conda environment, miniconda, reticulate's uv cache,
+your stored Python preference, your stored dependency versions, or all of the
+above. That means `destroy_greta_deps()`, `greta_remove_all_deps()`,
+`remove_greta_env()`, `remove_miniconda()`, and `remove_reticulate_uv_cache()`
+are now superseded. Similarly, `reinstall_greta_env()` and
+`reinstall_miniconda()` give way to `reinstall_greta_deps()`.
+
+`greta_sitrep()` has grown to match. It now reports the resolved Python backend
+and whether greta can start offline, including the `UV_OFFLINE` setting and
+whether the uv cache is populated, so you can see at a glance exactly what greta
+will do on its next load.
+
+## The TensorFlow version fix
+
+A small but crucial change: greta no longer pins TensorFlow to an exact version
+in its `DESCRIPTION`. Previously we required `== 2.16.0`, which is brittle by
+design; now we accept `>= 2.16.0`. Relatedly, `greta_deps_spec()` no longer
+validates every combination against a fixed compatibility table. It simply
+checks that the requested TensorFlow version is one greta supports (TensorFlow
+2.16 and later ship Keras 3 and are not supported), and leaves the rest to uv or
+conda to resolve. Less rigidity, fewer surprises.
+
+## Friendlier defaults and smaller fixes
+
+A few changes make everyday modelling a little nicer:
+
+- **Sensible parallel defaults.** `n_cores` now defaults to 2 and `chains`
+  defaults to 2. If you ask for more cores than you have, greta uses what is
+  actually available. This also keeps greta polite on CRAN's two-core check
+  machines, where we now cap TensorFlow's CPU thread pools under `R CMD check`
+  and during vignette builds.
+- **Clearer MCMC output.** The MCMC print method now includes warmup
+  information.
+- **Better display of unknown dimensions.** Reshaping a greta array with
+  `dim<-` keeps the familiar `?` placeholder for unknown values instead of
+  showing `NA`.
+- **Tunable situation reports.** `greta_sitrep()` gains a `verbosity` argument
+  with `"minimal"` (the default), `"detailed"`, and `"quiet"` levels.
+- **Assorted correctness fixes.** `outer()` (and `%o%`) now works with greta
+  arrays for multiplication instead of silently returning `NA`s,
+  `as.unknowns()` handles plain numeric vectors, and `log()` now warns when its
+  `base` argument would be ignored. Notes and messages are now emitted with
+  `message()` so you can `suppressMessages()` them.
+
+## What this means for you
+
+If you are a returning greta user: your models are safe, the API you know is
+intact, and the biggest practical change is that getting greta running should be
+much less fuss than it used to be. If installation ever misbehaves,
+`greta_sitrep()` will tell you what greta sees and what it will do next.
+
+If you are new to greta: welcome! You can install it straight from CRAN, and the
+Python side of things should sort itself out on first use.
+
+```r
+install.packages("greta")
+library(greta)
+```
+
+## The extensions can come home too
+
+And if you have been waiting on the extension packages,
+[greta.gp](https://github.com/greta-dev/greta.gp) for Gaussian processes,
+[greta.gam](https://github.com/greta-dev/greta.gam) for generalised additive
+models, and [greta.dynamics](https://github.com/greta-dev/greta.dynamics) for
+dynamical systems, they can now make their own way back to CRAN.
+
+## Acknowledgements
+
+A big thank you to everyone who reported installation issues, tested pre-release
+builds, and waited patiently while greta found its way home. In particular,
+thank you to the folks whose pull requests and issue reports shaped this
+release:
+
+[&#64;goldingn](https://github.com/goldingn),
+[&#64;t-kalinowski](https://github.com/t-kalinowski), and
+[&#64;yangchino1](https://github.com/yangchino1).
+
+<!-- TODO: verify contributor list before publishing (auto-derived from merged PRs and resolved issues since v0.5.0) -->
+
+It is good to be back.

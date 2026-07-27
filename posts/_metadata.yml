@@ -1,8 +1,12 @@
-# options specified here will apply to all posts in this folder
+# Options here apply to all posts in this folder.
 
-# freeze computational output
+# Freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
 freeze: true
 
-# Enable banner style title blocks
-title-block-banner: true
+# Purple greta banner-style title blocks, matching the site theme.
+title-block-banner: "#a379cc"
+title-block-banner-color: "#ffffff"
+
+# Consistent author byline and reading time across posts.
+toc: true

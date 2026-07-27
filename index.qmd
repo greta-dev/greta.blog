@@ -1,13 +1,22 @@
 ---
+title: "greta blog"
+subtitle: "News, releases, and stories from the greta project — statistical modelling in R."
+title-block-banner: "#a379cc"
+title-block-banner-color: "#ffffff"
+page-layout: full
 listing:
+  id: posts
   contents: posts
   sort: "date desc"
-  type: default
+  type: grid
+  grid-columns: 3
   categories: true
   sort-ui: false
   filter-ui: false
-page-layout: full
-title-block-banner: true
+  fields: [image, date, title, author, description, categories, reading-time]
+  feed: true
 ---
 
-
+Welcome to the [greta](https://greta-dev.github.io/greta/) blog, where we share
+release notes, worked examples, and news from across the greta family of
+packages. Browse the latest posts below.

@@ -1,19 +1,45 @@
 project:
   type: website
+  output-dir: _site
 
 website:
   title: "greta blog"
+  description: "News, releases, and stories from the greta project — statistical modelling in R."
+  site-url: https://greta-dev.github.io/greta.blog/
+  favicon: images/greta-hex.png
+  open-graph: true
   navbar:
+    background: light
+    logo: images/greta-wordmark.png
+    logo-alt: "greta"
+    title: false
+    left:
+      - text: "Blog"
+        href: index.qmd
+      - text: "greta docs"
+        href: https://greta-dev.github.io/greta/
     right:
       - icon: chat-fill
         href: https://forum.greta-stats.org/
+        aria-label: greta community forum
       - icon: github
         href: https://github.com/greta-dev
-      - icon: twitter
-        href: https://twitter.com/greta_stats
+        aria-label: greta on GitHub
+  page-footer:
+    background: light
+    left: "Built with [Quarto](https://quarto.org). Themed to match [greta](https://greta-dev.github.io/greta/)."
+    right:
+      - icon: chat-fill
+        href: https://forum.greta-stats.org/
+        aria-label: greta community forum
+      - icon: github
+        href: https://github.com/greta-dev
+        aria-label: greta on GitHub
+
 format:
   html:
-    theme: [yeti, styles.scss]
-
-
-
+    theme: [cosmo, styles.scss]
+    toc: true
+    anchor-sections: true
+    code-copy: true
+    code-overflow: wrap
