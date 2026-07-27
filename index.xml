@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>greta blog</title>
+<link>https://greta-dev.github.io/greta.blog/</link>
+<atom:link href="https://greta-dev.github.io/greta.blog/index.xml" rel="self" type="application/rss+xml"/>
+<description>News, releases, and stories from the greta project — statistical modelling in R.</description>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Thu, 29 Sep 2022 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>greta version 0.5.0</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/greta-tf-2/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>We are happy to say that greta version 0.5.0 is on CRAN!</p>
+<p>This particular release has been a long time in the making, as it uses tensorflow version 2. We’ll refer to Tensor Flow as TF hereafter. The overall impact on <code>greta</code> users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward.</p>
+<section id="tf-version-2" class="level2">
+<h2 class="anchored" data-anchor-id="tf-version-2">TF version 2</h2>
+<p>Google released TF version 2 in … 2019. This was a big change in the user interface to TF, as it changed from what was called “graph mode” to “eager mode”. Briefly, eager mode is ..</p>
+</section>
+<section id="what-changed-for-greta" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed-for-greta">What changed for greta</h2>
+<p>A lot. And also, not much. Internally we had to change a very large amount of the code insidie of greta, as changing from graph based execution to eager execution meant that</p>
+</section>
+<section id="new-features-in-greta" class="level2">
+<h2 class="anchored" data-anchor-id="new-features-in-greta">New features in greta</h2>
+</section>
+<section id="upcoming-features-in-greta" class="level2">
+<h2 class="anchored" data-anchor-id="upcoming-features-in-greta">Upcoming features in greta</h2>
+<p>Now that we’ve implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here’s a list of some of the new features you can expect in the future</p>
+<ul>
+<li>No U-turn Sampler</li>
+<li>Faster Tuning</li>
+<li>Marginalisation interface</li>
+<li></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>greta</category>
+  <category>tf2</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/greta-tf-2/</guid>
+  <pubDate>Thu, 29 Sep 2022 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>greta version 0.4.3</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/greta-043/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>We are happy to say that greta version 0.4.3 is now on CRAN</p>
+
+
+
+ ]]></description>
+  <category>greta</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/greta-043/</guid>
+  <pubDate>Mon, 12 Sep 2022 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>greta.dynamics 0.2.0</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-020/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+
+
+ ]]></description>
+  <category>greta.gp</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-020/</guid>
+  <pubDate>Tue, 06 Sep 2022 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>greta.gp 0.2.0</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/greta-gp-020/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://greta-dev.github.io/greta.blog/posts/greta-gp-020/bw-film-gp.jpg" class="img-fluid figure-img" alt="Parabolic curving bridges in Perth, Australia"></p>
+<figcaption>Bridges in Perth, film, Nick Tierney</figcaption>
+</figure>
+</div>
+<p>We are excited to announce that <code>greta.gp</code> version 0.2.0 is now on CRAN!</p>
+<p><code>greta.gp</code> provides a syntax to create and combine Gaussian process kernels in <code>greta</code>. You can then them to define either full rank or sparse Gaussian processes.</p>
+<p>Here’s a brief example:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># simulate data</span></span>
+<span id="cb1-2">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">runif</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span>
+<span id="cb1-3">y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sin</span>(x) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb1-4">x_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">seq</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length.out =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta.gp)</span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hyperparameters</span></span>
+<span id="cb2-4">rbf_var <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lognormal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span></code></pre></div></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">rbf_len <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lognormal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-2">obs_sd <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lognormal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># kernel &amp; GP</span></span>
+<span id="cb3-4">kernel <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbf</span>(rbf_len, rbf_var) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bias</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-5">f <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gp</span>(x, kernel)</span>
+<span id="cb3-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># likelihood</span></span>
+<span id="cb3-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">distribution</span>(y) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">normal</span>(f, obs_sd)</span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># prediction</span></span>
+<span id="cb3-9">f_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">project</span>(f, x_plot)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fit the model by Hamiltonian Monte Carlo</span></span>
+<span id="cb4-2">m <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model</span>(f_plot)</span>
+<span id="cb4-3">draws <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mcmc</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_samples =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">250</span>)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># plot 200 posterior samples</span></span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot</span>(</span>
+<span id="cb5-3">  y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> x,</span>
+<span id="cb5-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pch =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,</span>
+<span id="cb5-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grey</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.4</span>),</span>
+<span id="cb5-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>),</span>
+<span id="cb5-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ylim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.5</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.5</span>)</span>
+<span id="cb5-8">)</span>
+<span id="cb5-9"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>) {</span>
+<span id="cb5-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lines</span>(</span>
+<span id="cb5-11">    draws[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]][i, ] <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> x_plot,</span>
+<span id="cb5-12">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">lwd =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb5-13">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rgb</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.4</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>)</span>
+<span id="cb5-14">  )</span>
+<span id="cb5-15">}</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://greta-dev.github.io/greta.blog/posts/greta-gp-020/index_files/figure-html/plotting-1.png" class="img-fluid figure-img" width="2000"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+
+ ]]></description>
+  <category>greta.gp</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/greta-gp-020/</guid>
+  <pubDate>Tue, 06 Sep 2022 00:00:00 GMT</pubDate>
+  <media:content url="https://greta-dev.github.io/greta.blog/posts/greta-gp-020/bw-film-gp.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>

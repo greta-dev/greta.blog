@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "greta blog",
+    "section": "",
+    "text": "Welcome to the greta blog, where we share release notes, worked examples, and news from across the greta family of packages. Browse the latest posts below.\n\n\n\n\n\n\n\n\n\n\n\n\ngreta version 0.5.0\n\n1 min\n\n\ngreta\n\ntf2\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 29, 2022\n\n\n\n\n\n\n\n\n\n\n\ngreta version 0.4.3\n\n1 min\n\n\ngreta\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 12, 2022\n\n\n\n\n\n\n\n\n\n\n\ngreta.dynamics 0.2.0\n\n1 min\n\n\ngreta.gp\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.gp 0.2.0\n\n2 min\n\n\ngreta.gp\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/greta-gp-020/index.html",
+    "href": "posts/greta-gp-020/index.html",
+    "title": "greta.gp 0.2.0",
+    "section": "",
+    "text": "Bridges in Perth, film, Nick Tierney\n\n\nWe are excited to announce that greta.gp version 0.2.0 is now on CRAN!\ngreta.gp provides a syntax to create and combine Gaussian process kernels in greta. You can then them to define either full rank or sparse Gaussian processes.\nHere’s a brief example:\n\n# simulate data\nx &lt;- runif(20, 0, 10)\ny &lt;- sin(x) + rnorm(20, 0, 0.5)\nx_plot &lt;- seq(-1, 11, length.out = 200)\n\n\nlibrary(greta)\nlibrary(greta.gp)\n# hyperparameters\nrbf_var &lt;- lognormal(0, 1)\nrbf_len &lt;- lognormal(0, 1)\nobs_sd &lt;- lognormal(0, 1)\n# kernel & GP\nkernel &lt;- rbf(rbf_len, rbf_var) + bias(1)\nf &lt;- gp(x, kernel)\n# likelihood\ndistribution(y) &lt;- normal(f, obs_sd)\n# prediction\nf_plot &lt;- project(f, x_plot)\n\n\n# fit the model by Hamiltonian Monte Carlo\nm &lt;- model(f_plot)\ndraws &lt;- mcmc(m, n_samples = 250)\n\n\n# plot 200 posterior samples\nplot(\n  y ~ x,\n  pch = 16,\n  col = grey(0.4),\n  xlim = c(0, 10),\n  ylim = c(-2.5, 2.5)\n)\nfor (i in 1:200) {\n  lines(\n    draws[[1]][i, ] ~ x_plot,\n    lwd = 2,\n    col = rgb(0.7, 0.1, 0.4, 0.1)\n  )\n}"
+  },
+  {
+    "objectID": "posts/greta-043/index.html",
+    "href": "posts/greta-043/index.html",
+    "title": "greta version 0.4.3",
+    "section": "",
+    "text": "We are happy to say that greta version 0.4.3 is now on CRAN"
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html",
+    "href": "posts/greta-tf-2/index.html",
+    "title": "greta version 0.5.0",
+    "section": "",
+    "text": "We are happy to say that greta version 0.5.0 is on CRAN!\nThis particular release has been a long time in the making, as it uses tensorflow version 2. We’ll refer to Tensor Flow as TF hereafter. The overall impact on greta users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward."
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#tf-version-2",
+    "href": "posts/greta-tf-2/index.html#tf-version-2",
+    "title": "greta version 0.5.0",
+    "section": "TF version 2",
+    "text": "TF version 2\nGoogle released TF version 2 in … 2019. This was a big change in the user interface to TF, as it changed from what was called “graph mode” to “eager mode”. Briefly, eager mode is .."
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#what-changed-for-greta",
+    "href": "posts/greta-tf-2/index.html#what-changed-for-greta",
+    "title": "greta version 0.5.0",
+    "section": "What changed for greta",
+    "text": "What changed for greta\nA lot. And also, not much. Internally we had to change a very large amount of the code insidie of greta, as changing from graph based execution to eager execution meant that"
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#new-features-in-greta",
+    "href": "posts/greta-tf-2/index.html#new-features-in-greta",
+    "title": "greta version 0.5.0",
+    "section": "New features in greta",
+    "text": "New features in greta"
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#upcoming-features-in-greta",
+    "href": "posts/greta-tf-2/index.html#upcoming-features-in-greta",
+    "title": "greta version 0.5.0",
+    "section": "Upcoming features in greta",
+    "text": "Upcoming features in greta\nNow that we’ve implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here’s a list of some of the new features you can expect in the future\n\nNo U-turn Sampler\nFaster Tuning\nMarginalisation interface"
+  }
+]
