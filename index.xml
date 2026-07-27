@@ -10,9 +10,219 @@
 <atom:link href="https://greta-dev.github.io/greta.blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>News, releases, and stories from the greta project — statistical modelling in R.</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Thu, 29 Sep 2022 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 21 Jul 2026 00:00:00 GMT</lastBuildDate>
 <item>
-  <title>greta version 0.5.0</title>
+  <title>greta.dynamics 0.2.3</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-023/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="lead">
+<p><strong>We are pleased to announce the release of greta.dynamics 0.2.3.</strong> greta.dynamics is a greta extension for analysing dynamical systems: transition matrices you iterate to a stable state, and ordinary differential equations you solve.</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta.dynamics"</span>)</span></code></pre></div></div>
+<p>This is the first post about greta.dynamics on this blog, so rather than only covering what changed in 0.2.3, we will introduce the package and cover the features added in 0.2.2 as well. You can see the full list of changes in the <a href="https://github.com/greta-dev/greta.dynamics/blob/main/NEWS.md">release notes</a>.</p>
+<section id="back-on-cran" class="level2">
+<h2 class="anchored" data-anchor-id="back-on-cran">Back on CRAN</h2>
+<p>greta.dynamics was archived from CRAN in September 2025, as a consequence of its dependency, greta, being archived. greta 0.6.0 <a href="../2026-07-greta-0-6-0/">returned to CRAN in July 2026</a>, which unblocked this resubmission. greta.dynamics now requires greta 0.6.0 or later.</p>
+</section>
+<section id="what-greta.dynamics-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-greta.dynamics-does">What greta.dynamics does</h2>
+<p>The package gives you two families of tools, both of which produce greta arrays you can use inside a larger greta model.</p>
+<p><strong>Transition matrices.</strong> If you have a matrix describing how a structured population moves between stages from one timestep to the next, you often want to know where it settles: the stable stage distribution and the growth rate. <code>iterate_matrix()</code> iterates a fixed transition matrix until it converges.</p>
+<p><strong>Differential equations.</strong> <code>ode_solve()</code> solves a system of ODEs, given a derivative function, an initial state, and the times you want solutions at.</p>
+<p>Because the results are greta arrays, the interesting part is that all of this can sit inside a model where the matrix entries or ODE parameters are themselves things you are estimating.</p>
+</section>
+<section id="matrices-that-change-as-they-iterate" class="level2">
+<h2 class="anchored" data-anchor-id="matrices-that-change-as-they-iterate">Matrices that change as they iterate</h2>
+<p>The main feature added in 0.2.2 was a pair of functions for systems where the transition matrix is not constant.</p>
+<p><code>iterate_dynamic_matrix()</code> takes a <em>function</em> that returns a transition matrix, rather than a fixed matrix. That function is handed the current state and the iteration number, so the matrix can depend on both. This is how you express density dependence: a population whose survival or fecundity changes as the population itself grows.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta.dynamics)</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># a transition matrix that is constant across iterations. Its columns sum to</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># one, so the total population size is conserved and the two stages converge</span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># on a stable ratio of 2:1</span></span>
+<span id="cb2-7">matrix_function <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(state, iter) {</span>
+<span id="cb2-8">  mat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">zeros</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb2-9">  mat[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span></span>
+<span id="cb2-10">  mat[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span></span>
+<span id="cb2-11">  mat[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb2-12">  mat[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span></span>
+<span id="cb2-13">  mat</span>
+<span id="cb2-14">}</span>
+<span id="cb2-15"></span>
+<span id="cb2-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># start away from the stable state, so the iteration has work to do</span></span>
+<span id="cb2-17">initial_state <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_data</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span>
+<span id="cb2-18"></span>
+<span id="cb2-19">results <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">iterate_dynamic_matrix</span>(</span>
+<span id="cb2-20">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">matrix_function =</span> matrix_function,</span>
+<span id="cb2-21">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">initial_state =</span> initial_state,</span>
+<span id="cb2-22">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">niter =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>,</span>
+<span id="cb2-23">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tol =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e-6</span></span>
+<span id="cb2-24">)</span>
+<span id="cb2-25"></span>
+<span id="cb2-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the population size after the final iteration, and whether the iteration</span></span>
+<span id="cb2-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># converged before hitting `niter`</span></span>
+<span id="cb2-28"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">calculate</span>(results<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>stable_population, results<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>converged, results<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>iterations)</span></code></pre></div></div>
+<p><code>iterate_dynamic_function()</code> is the more general version: instead of returning a matrix, your function returns the next state directly. That covers transitions that are not expressible as a matrix multiply.</p>
+<p>Both return whether the iteration converged and how many iterations it took, so you can check that <code>niter</code> was high enough, rather than silently accepting a result that had not settled.</p>
+</section>
+<section id="breaking-change-in-0.2.2-ode-solvers" class="level2">
+<h2 class="anchored" data-anchor-id="breaking-change-in-0.2.2-ode-solvers">Breaking change in 0.2.2: ODE solvers</h2>
+<p>If you are coming from an older version, the one thing to be aware of is that <code>ode_solve()</code> changed its solver options in 0.2.2, to match the current TensorFlow Probability API. There are now two solvers:</p>
+<ul>
+<li><code>"dp"</code> (the default), the Dormand-Prince explicit solver for non-stiff problems. This is similar to deSolve’s <code>"ode45"</code>.</li>
+<li><code>"bdf"</code>, a Backward Differentiation Formula solver, for stiff problems.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ode_solve</span>(derivative, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y0 =</span> y0, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">times =</span> times, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bdf"</span>)</span></code></pre></div></div>
+<p>Solver-specific arguments cannot currently be set.</p>
+</section>
+<section id="documentation-fixes-in-0.2.3" class="level2">
+<h2 class="anchored" data-anchor-id="documentation-fixes-in-0.2.3">Documentation fixes in 0.2.3</h2>
+<p>Two documentation problems are fixed in this release.</p>
+<p>The <code>@return</code> documentation for <code>iterate_matrix()</code>, <code>iterate_dynamic_matrix()</code>, and <code>iterate_dynamic_function()</code> referred to a list element called <code>stable_state</code>, which none of these functions actually return. The docs now use the real names: <code>stable_distribution</code> for <code>iterate_matrix()</code>, and <code>stable_population</code> for the other two. If you had been writing <code>results$stable_state</code> and getting <code>NULL</code>, this is why.</p>
+<p><code>iterate_dynamic_matrix()</code> and <code>iterate_dynamic_function()</code> also previously had no examples at all. Both now have worked examples, like the one above.</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>A big thank you to all the folks who helped make this release happen:</p>
+<p><a href="https://github.com/goldingn">@goldingn</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>greta.dynamics</category>
+  <category>release</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-023/</guid>
+  <pubDate>Tue, 21 Jul 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>greta 0.5.0</title>
   <dc:creator>Nicholas Tierney</dc:creator>
   <link>https://greta-dev.github.io/greta.blog/posts/greta-tf-2/</link>
   <description><![CDATA[ 
@@ -21,40 +231,305 @@
 
 
 
-<p>We are happy to say that greta version 0.5.0 is on CRAN!</p>
-<p>This particular release has been a long time in the making, as it uses tensorflow version 2. We’ll refer to Tensor Flow as TF hereafter. The overall impact on <code>greta</code> users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward.</p>
-<section id="tf-version-2" class="level2">
-<h2 class="anchored" data-anchor-id="tf-version-2">TF version 2</h2>
-<p>Google released TF version 2 in … 2019. This was a big change in the user interface to TF, as it changed from what was called “graph mode” to “eager mode”. Briefly, eager mode is ..</p>
+<div class="lead">
+<p><strong>We are thrilled to announce the release of greta 0.5.0.</strong> greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta"</span>)</span></code></pre></div></div>
+<p>This release has been a long time in the making: greta now runs on TensorFlow 2. For most users, the models you write should work exactly as they did before. But this was a substantial internal change, and it comes with a reworked optimiser interface, a much better installation experience, and nicer printing. You can see the full list of changes in the <a href="https://greta-dev.github.io/greta/news/index.html">release notes</a>.</p>
+<p>Below we cover what you may need to change, and then what is new. We will refer to TensorFlow as TF from here on.</p>
+<section id="migrating-to-0.5.0" class="level2">
+<h2 class="anchored" data-anchor-id="migrating-to-0.5.0">Migrating to 0.5.0</h2>
+<section id="defunct-optimisers" class="level3">
+<h3 class="anchored" data-anchor-id="defunct-optimisers">Defunct optimisers</h3>
+<p>TensorFlow no longer supports a number of the optimisers greta used to expose, so these are now defunct:</p>
+<p><code>powell()</code>, <code>cg()</code>, <code>newton_cg()</code>, <code>l_bfgs_b()</code>, <code>tnc()</code>, <code>cobyla()</code>, and <code>slsqp()</code>.</p>
+<p>These functions still exist, so calling one gives you a proper error rather than “could not find function”:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">optimiser =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slsqp</span>())</span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#&gt; Error:</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#&gt; ! The optimiser, `slsqp()`, is defunct and has been removed in greta 0.5.0.</span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#&gt; Please use a different optimiser.</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#&gt; See `?optimisers` for detail on which optimizers are removed.</span></span></code></pre></div></div>
+<p>If you were using one of these, switch to one of the optimisers that remain, such as <code>adam()</code> or <code>gradient_descent()</code>. See <code>?optimisers</code> for the full list.</p>
 </section>
-<section id="what-changed-for-greta" class="level2">
-<h2 class="anchored" data-anchor-id="what-changed-for-greta">What changed for greta</h2>
-<p>A lot. And also, not much. Internally we had to change a very large amount of the code insidie of greta, as changing from graph based execution to eager execution meant that</p>
+<section id="momentum-is-folded-into-gradient_descent" class="level3">
+<h3 class="anchored" data-anchor-id="momentum-is-folded-into-gradient_descent"><code>momentum()</code> is folded into <code>gradient_descent()</code></h3>
+<p>The standalone <code>momentum()</code> optimiser is also defunct. Momentum is now an argument to <code>gradient_descent()</code>, which also gains <code>nesterov</code>:</p>
+<p><strong>Before:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">optimiser =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">momentum</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">learning_rate =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">momentum =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>))</span></code></pre></div></div>
+<p><strong>After:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">optimiser =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gradient_descent</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">learning_rate =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">momentum =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>))</span></code></pre></div></div>
 </section>
-<section id="new-features-in-greta" class="level2">
-<h2 class="anchored" data-anchor-id="new-features-in-greta">New features in greta</h2>
+<section id="rms_prop-renames-decay-to-rho" class="level3">
+<h3 class="anchored" data-anchor-id="rms_prop-renames-decay-to-rho"><code>rms_prop()</code> renames <code>decay</code> to <code>rho</code></h3>
+<p><strong>Before:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">optimiser =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rms_prop</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">decay =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>))</span></code></pre></div></div>
+<p><strong>After:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">optimiser =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rms_prop</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rho =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>))</span></code></pre></div></div>
+<p><code>rms_prop()</code> also gains a <code>centered</code> argument, matching <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/RMSprop">the TF documentation</a>.</p>
 </section>
-<section id="upcoming-features-in-greta" class="level2">
-<h2 class="anchored" data-anchor-id="upcoming-features-in-greta">Upcoming features in greta</h2>
-<p>Now that we’ve implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here’s a list of some of the new features you can expect in the future</p>
+<section id="other-things-that-may-affect-you" class="level3">
+<h3 class="anchored" data-anchor-id="other-things-that-may-affect-you">Other things that may affect you</h3>
 <ul>
-<li>No U-turn Sampler</li>
-<li>Faster Tuning</li>
-<li>Marginalisation interface</li>
-<li></li>
+<li>greta now requires R 4.1.0 or later.</li>
+<li><code>install_greta_deps()</code> no longer takes <code>method</code>, <code>conda</code>, or <code>manual</code> arguments; the first two were never used.</li>
+<li>The <code>greta_nodes_install_*()</code> and <code>greta_nodes_conda_*()</code> options are defunct.</li>
 </ul>
+</section>
+</section>
+<section id="why-tensorflow-2" class="level2">
+<h2 class="anchored" data-anchor-id="why-tensorflow-2">Why TensorFlow 2</h2>
+<p>Google released TF 2 in September 2019. The headline change was how TF executes code. TF 1 used what was called “graph mode”: you described a static computation graph up front, then handed it to a session to run. TF 2 uses “eager mode” instead, where operations are evaluated immediately as they are called, much like ordinary R or Python code. Graphs did not go away, but they became something you opt into for performance rather than the only way to work.</p>
+<p>For greta this was both a large change and a small one. Internally, a great deal of code had to change, because greta’s whole approach is to build up a graph of your model and then hand it to TF. Moving from graph-based execution to eager execution meant rewriting how that graph is constructed and evaluated. Outwardly, though, the greta code you write is the same:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span>
+<span id="cb7-2"></span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># data</span></span>
+<span id="cb7-4">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_data</span>(iris<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Petal.Length)</span>
+<span id="cb7-5">y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_data</span>(iris<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Sepal.Length)</span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># priors</span></span>
+<span id="cb7-8">int <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">normal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span>
+<span id="cb7-9">coef <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">normal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb7-10">sd <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lognormal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb7-11"></span>
+<span id="cb7-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># likelihood</span></span>
+<span id="cb7-13">mu <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> int <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> coef <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> x</span>
+<span id="cb7-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">distribution</span>(y) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">normal</span>(mu, sd)</span>
+<span id="cb7-15"></span>
+<span id="cb7-16">m <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model</span>(int, coef, sd)</span>
+<span id="cb7-17">draws <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mcmc</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_samples =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span>)</span></code></pre></div></div>
+<p>The reason for going through all of this is that TF 1 was reaching end of life, and staying on it meant greta could not use anything new. Being on TF 2 puts greta back on a supported foundation.</p>
+</section>
+<section id="new-optimiser-options" class="level2">
+<h2 class="anchored" data-anchor-id="new-optimiser-options">New optimiser options</h2>
+<p>Moving to the current TF optimiser interface also brought new options:</p>
+<ul>
+<li><code>gradient_descent()</code> gains <code>momentum</code> and <code>nesterov</code> arguments (<a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/SGD">docs</a>).</li>
+<li><code>adagrad()</code> gains an <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adagrad"><code>epsilon</code> argument</a>.</li>
+<li><code>adam()</code> gains an <code>amsgrad</code> argument (<a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adam">docs</a>).</li>
+<li><code>ftrl()</code> gains <code>l2_shrinkage_regularization_strength</code> and <code>beta</code>.</li>
+<li>Two new optimisers: <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adamax"><code>adamax()</code></a> and <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Nadam"><code>nadam()</code></a>.</li>
+</ul>
+</section>
+<section id="installation-revamp" class="level2">
+<h2 class="anchored" data-anchor-id="installation-revamp">Installation revamp</h2>
+<p>Installation should now tell you more about what it is doing, and fail more gracefully when something goes wrong. The intention is that it should <em>just work</em>, and if it does not, that you get useful advice about where to look.</p>
+<p>The new <code>greta_deps_spec()</code> gives you one object for specifying which versions you want, rather than a scattering of arguments:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install_greta_deps</span>(</span>
+<span id="cb8-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">deps =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_deps_spec</span>(</span>
+<span id="cb8-3">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tf_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2.15.1"</span>,</span>
+<span id="cb8-4">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tfp_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.23.0"</span>,</span>
+<span id="cb8-5">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">python_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3.11"</span></span>
+<span id="cb8-6">  )</span>
+<span id="cb8-7">)</span></code></pre></div></div>
+<p>Not every combination of TF, TF Probability, and Python works together, so greta now checks your request against a table of known-good combinations, shipped as the <code>greta_deps_tf_tfp</code> dataset. If you ask for something that will not work, greta tells you before it starts installing rather than after.</p>
+<p>Alongside this:</p>
+<ul>
+<li>Installation now writes to a single log file. Set its location with <code>greta_set_install_logfile()</code>, write it with <code>write_greta_install_log()</code>, and open it with <code>open_greta_install_log()</code>. The log goes to a sensible per-user location via <code>tools::R_user_dir()</code>, so it can always be found.</li>
+<li><code>destroy_greta_deps()</code> removes miniconda and greta’s Python conda environment, for when you want to start over completely.</li>
+<li><code>greta_deps_receipt()</code> reports the TF, TF Probability, and Python versions actually installed, without validating them against greta’s supported range. This means it still works when you have something newer than greta officially supports.</li>
+<li><code>install_greta_deps()</code> and <code>reinstall_greta_deps()</code> gain a <code>restart</code> argument to restart R for you once installation finishes.</li>
+<li>Installation processes now have a default five minute timeout, so a stalled install does not hang forever.</li>
+<li><code>greta_sitrep()</code> now checks for installations of Python, TF, and TF Probability.</li>
+</ul>
+</section>
+<section id="better-printing" class="level2">
+<h2 class="anchored" data-anchor-id="better-printing">Better printing</h2>
+<p>MCMC output and greta arrays both used to flood the console. They now have print methods that keep things to a readable size, and you can control how much you see with the <code>n</code> argument:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(draws, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span></code></pre></div></div>
+</section>
+<section id="minor-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="minor-improvements">Minor improvements</h2>
+<ul>
+<li>The slice sampler no longer requires <code>precision = "single"</code> to work.</li>
+<li><code>is.greta_array()</code> and <code>is.greta_mcmc_list()</code> are now exported.</li>
+<li>Fixes to the Wishart and LKJ correlation distributions, including a bug where the log probability could return <code>NaN</code>, and a fix for <code>lkj_correlation()</code> so that it now works with unknown dimensions.</li>
+<li>A fix for a dimension error in matrix multiplication that occurred before coercing to a greta array.</li>
+</ul>
+</section>
+<section id="what-this-unlocks" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-unlocks">What this unlocks</h2>
+<p>Now that greta is on TF 2, we can start taking advantage of what is available in modern TF and TF Probability. Some of the things we would like to explore:</p>
+<ul>
+<li>the No-U-Turn Sampler (NUTS)</li>
+<li>faster tuning during warmup</li>
+<li>an interface for marginalisation</li>
+</ul>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>A big thank you to all the folks who helped make this release happen:</p>
+<p><a href="https://github.com/AugustHao">@AugustHao</a>, <a href="https://github.com/geryan">@geryan</a>, <a href="https://github.com/goldingn">@goldingn</a>, and <a href="https://github.com/wiligl">@wiligl</a>.</p>
 
 
 </section>
 
  ]]></description>
   <category>greta</category>
+  <category>release</category>
   <category>tf2</category>
   <guid>https://greta-dev.github.io/greta.blog/posts/greta-tf-2/</guid>
-  <pubDate>Thu, 29 Sep 2022 00:00:00 GMT</pubDate>
+  <pubDate>Sun, 10 Nov 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>greta version 0.4.3</title>
+  <title>greta 0.4.3</title>
   <dc:creator>Nicholas Tierney</dc:creator>
   <link>https://greta-dev.github.io/greta.blog/posts/greta-043/</link>
   <description><![CDATA[ 
@@ -63,32 +538,44 @@
 
 
 
-<p>We are happy to say that greta version 0.4.3 is now on CRAN</p>
+<div class="lead">
+<p><strong>We are pleased to announce the release of greta 0.4.3.</strong> greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta"</span>)</span></code></pre></div></div>
+<p>This is a small maintenance release, focused on installation and on making greta behave properly on machines with a single core. You can see the full list of changes in the <a href="https://greta-dev.github.io/greta/news/index.html">release notes</a>.</p>
+<section id="starting-installation-from-a-clean-slate" class="level2">
+<h2 class="anchored" data-anchor-id="starting-installation-from-a-clean-slate">Starting installation from a clean slate</h2>
+<p>Most installation problems in greta come down to a Python environment that has ended up in an odd state, and the fastest way out is usually to start again. The new <code>reinstall_greta_deps()</code> does exactly that: it removes greta’s existing Python dependencies and installs them fresh, in one step.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">reinstall_greta_deps</span>()</span></code></pre></div></div>
+<p>Previously this meant removing the conda environment and miniconda yourself before re-running <code>install_greta_deps()</code>, which was easy to get half-right.</p>
+</section>
+<section id="fixes-for-single-core-machines" class="level2">
+<h2 class="anchored" data-anchor-id="fixes-for-single-core-machines">Fixes for single-core machines</h2>
+<p>greta uses the <a href="https://future.futureverse.org/">future</a> package to run MCMC chains in parallel. On a machine with only one core available, future and <a href="https://parallelly.futureverse.org/">parallelly</a> would raise an error rather than simply running the chains one after another. That is now fixed, so greta works on single-core machines, including some continuous integration runners and smaller cloud instances.</p>
+<p>We have also removed all internal use of future’s <code>multiprocess</code> plan, which was deprecated upstream, so you will no longer see deprecation warnings from future when running <code>mcmc()</code>.</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>A big thank you to all the folks who helped make this release happen:</p>
+<p><a href="https://github.com/assignUser">@assignUser</a>, <a href="https://github.com/goldingn">@goldingn</a>, <a href="https://github.com/HenrikBengtsson">@HenrikBengtsson</a>, <a href="https://github.com/hrlai">@hrlai</a>, <a href="https://github.com/olivuntu">@olivuntu</a>, and <a href="https://github.com/zhiiiyang">@zhiiiyang</a>.</p>
 
 
+</section>
 
  ]]></description>
   <category>greta</category>
+  <category>release</category>
   <guid>https://greta-dev.github.io/greta.blog/posts/greta-043/</guid>
   <pubDate>Mon, 12 Sep 2022 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>greta.dynamics 0.2.0</title>
-  <dc:creator>Nicholas Tierney</dc:creator>
-  <link>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-020/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-
-
-
- ]]></description>
-  <category>greta.gp</category>
-  <guid>https://greta-dev.github.io/greta.blog/posts/greta-dynamics-020/</guid>
-  <pubDate>Tue, 06 Sep 2022 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>greta.gp 0.2.0</title>
@@ -346,6 +833,7 @@ font-style: inherit;">0.1</span>)</span>
 
  ]]></description>
   <category>greta.gp</category>
+  <category>release</category>
   <guid>https://greta-dev.github.io/greta.blog/posts/greta-gp-020/</guid>
   <pubDate>Tue, 06 Sep 2022 00:00:00 GMT</pubDate>
   <media:content url="https://greta-dev.github.io/greta.blog/posts/greta-gp-020/bw-film-gp.jpg" medium="image" type="image/jpeg"/>

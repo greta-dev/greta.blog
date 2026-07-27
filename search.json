@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "greta blog",
     "section": "",
-    "text": "Welcome to the greta blog, where we share release notes, worked examples, and news from across the greta family of packages. Browse the latest posts below.\n\n\n\n\n\n\n\n\n\n\n\n\ngreta version 0.5.0\n\n1 min\n\n\ngreta\n\ntf2\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 29, 2022\n\n\n\n\n\n\n\n\n\n\n\ngreta version 0.4.3\n\n1 min\n\n\ngreta\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 12, 2022\n\n\n\n\n\n\n\n\n\n\n\ngreta.dynamics 0.2.0\n\n1 min\n\n\ngreta.gp\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.gp 0.2.0\n\n2 min\n\n\ngreta.gp\n\n\n\n\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to the greta blog, where we share release notes, worked examples, and news from across the greta family of packages. Browse the latest posts below.\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.dynamics 0.2.3\n\n4 min\n\n\ngreta.dynamics\n\nrelease\n\n\n\ngreta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover…\n\n\n\nNicholas Tierney\n\n\nJul 21, 2026\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.5.0\n\n5 min\n\n\ngreta\n\nrelease\n\ntf2\n\n\n\ngreta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.\n\n\n\nNicholas Tierney\n\n\nNov 10, 2024\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.4.3\n\n2 min\n\n\ngreta\n\nrelease\n\n\n\ngreta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.\n\n\n\nNicholas Tierney\n\n\nSep 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.gp 0.2.0\n\n2 min\n\n\ngreta.gp\n\nrelease\n\n\n\ngreta.gp 0.2.0 is on CRAN. greta.gp provides a syntax for creating and combining Gaussian process kernels in greta, which you can then use to define either full rank or…\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/greta-gp-020/index.html",
@@ -16,43 +16,141 @@
   {
     "objectID": "posts/greta-043/index.html",
     "href": "posts/greta-043/index.html",
-    "title": "greta version 0.4.3",
+    "title": "greta 0.4.3",
     "section": "",
-    "text": "We are happy to say that greta version 0.4.3 is now on CRAN"
+    "text": "We are pleased to announce the release of greta 0.4.3. greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.\nThis is a small maintenance release, focused on installation and on making greta behave properly on machines with a single core. You can see the full list of changes in the release notes."
+  },
+  {
+    "objectID": "posts/greta-043/index.html#starting-installation-from-a-clean-slate",
+    "href": "posts/greta-043/index.html#starting-installation-from-a-clean-slate",
+    "title": "greta 0.4.3",
+    "section": "Starting installation from a clean slate",
+    "text": "Starting installation from a clean slate\nMost installation problems in greta come down to a Python environment that has ended up in an odd state, and the fastest way out is usually to start again. The new reinstall_greta_deps() does exactly that: it removes greta’s existing Python dependencies and installs them fresh, in one step.\nlibrary(greta)\nreinstall_greta_deps()\nPreviously this meant removing the conda environment and miniconda yourself before re-running install_greta_deps(), which was easy to get half-right."
+  },
+  {
+    "objectID": "posts/greta-043/index.html#fixes-for-single-core-machines",
+    "href": "posts/greta-043/index.html#fixes-for-single-core-machines",
+    "title": "greta 0.4.3",
+    "section": "Fixes for single-core machines",
+    "text": "Fixes for single-core machines\ngreta uses the future package to run MCMC chains in parallel. On a machine with only one core available, future and parallelly would raise an error rather than simply running the chains one after another. That is now fixed, so greta works on single-core machines, including some continuous integration runners and smaller cloud instances.\nWe have also removed all internal use of future’s multiprocess plan, which was deprecated upstream, so you will no longer see deprecation warnings from future when running mcmc()."
+  },
+  {
+    "objectID": "posts/greta-043/index.html#acknowledgements",
+    "href": "posts/greta-043/index.html#acknowledgements",
+    "title": "greta 0.4.3",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nA big thank you to all the folks who helped make this release happen:\n@assignUser, @goldingn, @HenrikBengtsson, @hrlai, @olivuntu, and @zhiiiyang."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html",
+    "href": "posts/greta-dynamics-023/index.html",
+    "title": "greta.dynamics 0.2.3",
+    "section": "",
+    "text": "We are pleased to announce the release of greta.dynamics 0.2.3. greta.dynamics is a greta extension for analysing dynamical systems: transition matrices you iterate to a stable state, and ordinary differential equations you solve.\nThis is the first post about greta.dynamics on this blog, so rather than only covering what changed in 0.2.3, we will introduce the package and cover the features added in 0.2.2 as well. You can see the full list of changes in the release notes."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#back-on-cran",
+    "href": "posts/greta-dynamics-023/index.html#back-on-cran",
+    "title": "greta.dynamics 0.2.3",
+    "section": "Back on CRAN",
+    "text": "Back on CRAN\ngreta.dynamics was archived from CRAN in September 2025, as a consequence of its dependency, greta, being archived. greta 0.6.0 returned to CRAN in July 2026, which unblocked this resubmission. greta.dynamics now requires greta 0.6.0 or later."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#what-greta.dynamics-does",
+    "href": "posts/greta-dynamics-023/index.html#what-greta.dynamics-does",
+    "title": "greta.dynamics 0.2.3",
+    "section": "What greta.dynamics does",
+    "text": "What greta.dynamics does\nThe package gives you two families of tools, both of which produce greta arrays you can use inside a larger greta model.\nTransition matrices. If you have a matrix describing how a structured population moves between stages from one timestep to the next, you often want to know where it settles: the stable stage distribution and the growth rate. iterate_matrix() iterates a fixed transition matrix until it converges.\nDifferential equations. ode_solve() solves a system of ODEs, given a derivative function, an initial state, and the times you want solutions at.\nBecause the results are greta arrays, the interesting part is that all of this can sit inside a model where the matrix entries or ODE parameters are themselves things you are estimating."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#matrices-that-change-as-they-iterate",
+    "href": "posts/greta-dynamics-023/index.html#matrices-that-change-as-they-iterate",
+    "title": "greta.dynamics 0.2.3",
+    "section": "Matrices that change as they iterate",
+    "text": "Matrices that change as they iterate\nThe main feature added in 0.2.2 was a pair of functions for systems where the transition matrix is not constant.\niterate_dynamic_matrix() takes a function that returns a transition matrix, rather than a fixed matrix. That function is handed the current state and the iteration number, so the matrix can depend on both. This is how you express density dependence: a population whose survival or fecundity changes as the population itself grows.\nlibrary(greta)\nlibrary(greta.dynamics)\n\n# a transition matrix that is constant across iterations. Its columns sum to\n# one, so the total population size is conserved and the two stages converge\n# on a stable ratio of 2:1\nmatrix_function &lt;- function(state, iter) {\n  mat &lt;- zeros(2, 2)\n  mat[1, 1] &lt;- 0.9\n  mat[1, 2] &lt;- 0.2\n  mat[2, 1] &lt;- 0.1\n  mat[2, 2] &lt;- 0.8\n  mat\n}\n\n# start away from the stable state, so the iteration has work to do\ninitial_state &lt;- as_data(matrix(c(2, 20), nrow = 2, ncol = 1))\n\nresults &lt;- iterate_dynamic_matrix(\n  matrix_function = matrix_function,\n  initial_state = initial_state,\n  niter = 100,\n  tol = 1e-6\n)\n\n# the population size after the final iteration, and whether the iteration\n# converged before hitting `niter`\ncalculate(results$stable_population, results$converged, results$iterations)\niterate_dynamic_function() is the more general version: instead of returning a matrix, your function returns the next state directly. That covers transitions that are not expressible as a matrix multiply.\nBoth return whether the iteration converged and how many iterations it took, so you can check that niter was high enough, rather than silently accepting a result that had not settled."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#breaking-change-in-0.2.2-ode-solvers",
+    "href": "posts/greta-dynamics-023/index.html#breaking-change-in-0.2.2-ode-solvers",
+    "title": "greta.dynamics 0.2.3",
+    "section": "Breaking change in 0.2.2: ODE solvers",
+    "text": "Breaking change in 0.2.2: ODE solvers\nIf you are coming from an older version, the one thing to be aware of is that ode_solve() changed its solver options in 0.2.2, to match the current TensorFlow Probability API. There are now two solvers:\n\n\"dp\" (the default), the Dormand-Prince explicit solver for non-stiff problems. This is similar to deSolve’s \"ode45\".\n\"bdf\", a Backward Differentiation Formula solver, for stiff problems.\n\node_solve(derivative, y0 = y0, times = times, method = \"bdf\")\nSolver-specific arguments cannot currently be set."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#documentation-fixes-in-0.2.3",
+    "href": "posts/greta-dynamics-023/index.html#documentation-fixes-in-0.2.3",
+    "title": "greta.dynamics 0.2.3",
+    "section": "Documentation fixes in 0.2.3",
+    "text": "Documentation fixes in 0.2.3\nTwo documentation problems are fixed in this release.\nThe @return documentation for iterate_matrix(), iterate_dynamic_matrix(), and iterate_dynamic_function() referred to a list element called stable_state, which none of these functions actually return. The docs now use the real names: stable_distribution for iterate_matrix(), and stable_population for the other two. If you had been writing results$stable_state and getting NULL, this is why.\niterate_dynamic_matrix() and iterate_dynamic_function() also previously had no examples at all. Both now have worked examples, like the one above."
+  },
+  {
+    "objectID": "posts/greta-dynamics-023/index.html#acknowledgements",
+    "href": "posts/greta-dynamics-023/index.html#acknowledgements",
+    "title": "greta.dynamics 0.2.3",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nA big thank you to all the folks who helped make this release happen:\n@goldingn."
   },
   {
     "objectID": "posts/greta-tf-2/index.html",
     "href": "posts/greta-tf-2/index.html",
-    "title": "greta version 0.5.0",
+    "title": "greta 0.5.0",
     "section": "",
-    "text": "We are happy to say that greta version 0.5.0 is on CRAN!\nThis particular release has been a long time in the making, as it uses tensorflow version 2. We’ll refer to Tensor Flow as TF hereafter. The overall impact on greta users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward."
+    "text": "We are thrilled to announce the release of greta 0.5.0. greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.\nThis release has been a long time in the making: greta now runs on TensorFlow 2. For most users, the models you write should work exactly as they did before. But this was a substantial internal change, and it comes with a reworked optimiser interface, a much better installation experience, and nicer printing. You can see the full list of changes in the release notes.\nBelow we cover what you may need to change, and then what is new. We will refer to TensorFlow as TF from here on."
   },
   {
-    "objectID": "posts/greta-tf-2/index.html#tf-version-2",
-    "href": "posts/greta-tf-2/index.html#tf-version-2",
-    "title": "greta version 0.5.0",
-    "section": "TF version 2",
-    "text": "TF version 2\nGoogle released TF version 2 in … 2019. This was a big change in the user interface to TF, as it changed from what was called “graph mode” to “eager mode”. Briefly, eager mode is .."
+    "objectID": "posts/greta-tf-2/index.html#migrating-to-0.5.0",
+    "href": "posts/greta-tf-2/index.html#migrating-to-0.5.0",
+    "title": "greta 0.5.0",
+    "section": "Migrating to 0.5.0",
+    "text": "Migrating to 0.5.0\n\nDefunct optimisers\nTensorFlow no longer supports a number of the optimisers greta used to expose, so these are now defunct:\npowell(), cg(), newton_cg(), l_bfgs_b(), tnc(), cobyla(), and slsqp().\nThese functions still exist, so calling one gives you a proper error rather than “could not find function”:\nopt(m, optimiser = slsqp())\n#&gt; Error:\n#&gt; ! The optimiser, `slsqp()`, is defunct and has been removed in greta 0.5.0.\n#&gt; Please use a different optimiser.\n#&gt; See `?optimisers` for detail on which optimizers are removed.\nIf you were using one of these, switch to one of the optimisers that remain, such as adam() or gradient_descent(). See ?optimisers for the full list.\n\n\nmomentum() is folded into gradient_descent()\nThe standalone momentum() optimiser is also defunct. Momentum is now an argument to gradient_descent(), which also gains nesterov:\nBefore:\nopt(m, optimiser = momentum(learning_rate = 0.01, momentum = 0.9))\nAfter:\nopt(m, optimiser = gradient_descent(learning_rate = 0.01, momentum = 0.9))\n\n\nrms_prop() renames decay to rho\nBefore:\nopt(m, optimiser = rms_prop(decay = 0.9))\nAfter:\nopt(m, optimiser = rms_prop(rho = 0.9))\nrms_prop() also gains a centered argument, matching the TF documentation.\n\n\nOther things that may affect you\n\ngreta now requires R 4.1.0 or later.\ninstall_greta_deps() no longer takes method, conda, or manual arguments; the first two were never used.\nThe greta_nodes_install_*() and greta_nodes_conda_*() options are defunct."
   },
   {
-    "objectID": "posts/greta-tf-2/index.html#what-changed-for-greta",
-    "href": "posts/greta-tf-2/index.html#what-changed-for-greta",
-    "title": "greta version 0.5.0",
-    "section": "What changed for greta",
-    "text": "What changed for greta\nA lot. And also, not much. Internally we had to change a very large amount of the code insidie of greta, as changing from graph based execution to eager execution meant that"
+    "objectID": "posts/greta-tf-2/index.html#why-tensorflow-2",
+    "href": "posts/greta-tf-2/index.html#why-tensorflow-2",
+    "title": "greta 0.5.0",
+    "section": "Why TensorFlow 2",
+    "text": "Why TensorFlow 2\nGoogle released TF 2 in September 2019. The headline change was how TF executes code. TF 1 used what was called “graph mode”: you described a static computation graph up front, then handed it to a session to run. TF 2 uses “eager mode” instead, where operations are evaluated immediately as they are called, much like ordinary R or Python code. Graphs did not go away, but they became something you opt into for performance rather than the only way to work.\nFor greta this was both a large change and a small one. Internally, a great deal of code had to change, because greta’s whole approach is to build up a graph of your model and then hand it to TF. Moving from graph-based execution to eager execution meant rewriting how that graph is constructed and evaluated. Outwardly, though, the greta code you write is the same:\nlibrary(greta)\n\n# data\nx &lt;- as_data(iris$Petal.Length)\ny &lt;- as_data(iris$Sepal.Length)\n\n# priors\nint &lt;- normal(0, 5)\ncoef &lt;- normal(0, 3)\nsd &lt;- lognormal(0, 3)\n\n# likelihood\nmu &lt;- int + coef * x\ndistribution(y) &lt;- normal(mu, sd)\n\nm &lt;- model(int, coef, sd)\ndraws &lt;- mcmc(m, n_samples = 1000)\nThe reason for going through all of this is that TF 1 was reaching end of life, and staying on it meant greta could not use anything new. Being on TF 2 puts greta back on a supported foundation."
   },
   {
-    "objectID": "posts/greta-tf-2/index.html#new-features-in-greta",
-    "href": "posts/greta-tf-2/index.html#new-features-in-greta",
-    "title": "greta version 0.5.0",
-    "section": "New features in greta",
-    "text": "New features in greta"
+    "objectID": "posts/greta-tf-2/index.html#new-optimiser-options",
+    "href": "posts/greta-tf-2/index.html#new-optimiser-options",
+    "title": "greta 0.5.0",
+    "section": "New optimiser options",
+    "text": "New optimiser options\nMoving to the current TF optimiser interface also brought new options:\n\ngradient_descent() gains momentum and nesterov arguments (docs).\nadagrad() gains an epsilon argument.\nadam() gains an amsgrad argument (docs).\nftrl() gains l2_shrinkage_regularization_strength and beta.\nTwo new optimisers: adamax() and nadam()."
   },
   {
-    "objectID": "posts/greta-tf-2/index.html#upcoming-features-in-greta",
-    "href": "posts/greta-tf-2/index.html#upcoming-features-in-greta",
-    "title": "greta version 0.5.0",
-    "section": "Upcoming features in greta",
-    "text": "Upcoming features in greta\nNow that we’ve implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here’s a list of some of the new features you can expect in the future\n\nNo U-turn Sampler\nFaster Tuning\nMarginalisation interface"
+    "objectID": "posts/greta-tf-2/index.html#installation-revamp",
+    "href": "posts/greta-tf-2/index.html#installation-revamp",
+    "title": "greta 0.5.0",
+    "section": "Installation revamp",
+    "text": "Installation revamp\nInstallation should now tell you more about what it is doing, and fail more gracefully when something goes wrong. The intention is that it should just work, and if it does not, that you get useful advice about where to look.\nThe new greta_deps_spec() gives you one object for specifying which versions you want, rather than a scattering of arguments:\ninstall_greta_deps(\n  deps = greta_deps_spec(\n    tf_version = \"2.15.1\",\n    tfp_version = \"0.23.0\",\n    python_version = \"3.11\"\n  )\n)\nNot every combination of TF, TF Probability, and Python works together, so greta now checks your request against a table of known-good combinations, shipped as the greta_deps_tf_tfp dataset. If you ask for something that will not work, greta tells you before it starts installing rather than after.\nAlongside this:\n\nInstallation now writes to a single log file. Set its location with greta_set_install_logfile(), write it with write_greta_install_log(), and open it with open_greta_install_log(). The log goes to a sensible per-user location via tools::R_user_dir(), so it can always be found.\ndestroy_greta_deps() removes miniconda and greta’s Python conda environment, for when you want to start over completely.\ngreta_deps_receipt() reports the TF, TF Probability, and Python versions actually installed, without validating them against greta’s supported range. This means it still works when you have something newer than greta officially supports.\ninstall_greta_deps() and reinstall_greta_deps() gain a restart argument to restart R for you once installation finishes.\nInstallation processes now have a default five minute timeout, so a stalled install does not hang forever.\ngreta_sitrep() now checks for installations of Python, TF, and TF Probability."
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#better-printing",
+    "href": "posts/greta-tf-2/index.html#better-printing",
+    "title": "greta 0.5.0",
+    "section": "Better printing",
+    "text": "Better printing\nMCMC output and greta arrays both used to flood the console. They now have print methods that keep things to a readable size, and you can control how much you see with the n argument:\nprint(draws, n = 5)"
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#minor-improvements",
+    "href": "posts/greta-tf-2/index.html#minor-improvements",
+    "title": "greta 0.5.0",
+    "section": "Minor improvements",
+    "text": "Minor improvements\n\nThe slice sampler no longer requires precision = \"single\" to work.\nis.greta_array() and is.greta_mcmc_list() are now exported.\nFixes to the Wishart and LKJ correlation distributions, including a bug where the log probability could return NaN, and a fix for lkj_correlation() so that it now works with unknown dimensions.\nA fix for a dimension error in matrix multiplication that occurred before coercing to a greta array."
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#what-this-unlocks",
+    "href": "posts/greta-tf-2/index.html#what-this-unlocks",
+    "title": "greta 0.5.0",
+    "section": "What this unlocks",
+    "text": "What this unlocks\nNow that greta is on TF 2, we can start taking advantage of what is available in modern TF and TF Probability. Some of the things we would like to explore:\n\nthe No-U-Turn Sampler (NUTS)\nfaster tuning during warmup\nan interface for marginalisation"
+  },
+  {
+    "objectID": "posts/greta-tf-2/index.html#acknowledgements",
+    "href": "posts/greta-tf-2/index.html#acknowledgements",
+    "title": "greta 0.5.0",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nA big thank you to all the folks who helped make this release happen:\n@AugustHao, @geryan, @goldingn, and @wiligl."
   }
 ]
