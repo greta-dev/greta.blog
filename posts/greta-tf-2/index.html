@@ -7,10 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nicholas Tierney">
-<meta name="dcterms.date" content="2024-11-10">
-<meta name="description" content="greta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.">
+<meta name="dcterms.date" content="2022-09-29">
 
-<title>greta 0.5.0 – greta blog</title>
+<title>greta version 0.5.0 – greta blog</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -28,41 +27,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -131,12 +95,9 @@ background: #a379cc;
 </style>
 
 
-<meta property="og:title" content="greta 0.5.0 – greta blog">
-<meta property="og:description" content="greta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.">
+<meta property="og:title" content="greta version 0.5.0 – greta blog">
+<meta property="og:description" content="News, releases, and stories from the greta project — statistical modelling in R.">
 <meta property="og:site_name" content="greta blog">
-<meta name="twitter:title" content="greta 0.5.0 – greta blog">
-<meta name="twitter:description" content="greta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.">
-<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -188,15 +149,9 @@ background: #a379cc;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">greta 0.5.0</h1>
-                  <div>
-        <div class="description">
-          <p>greta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.</p>
-        </div>
-      </div>
-                          <div class="quarto-categories">
+      <h1 class="title">greta version 0.5.0</h1>
+                                <div class="quarto-categories">
                 <div class="quarto-category">greta</div>
-                <div class="quarto-category">release</div>
                 <div class="quarto-category">tf2</div>
               </div>
                   </div>
@@ -215,7 +170,7 @@ background: #a379cc;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 10, 2024</p>
+        <p class="date">September 29, 2022</p>
       </div>
     </div>
     
@@ -231,20 +186,10 @@ background: #a379cc;
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#migrating-to-0.5.0" id="toc-migrating-to-0.5.0" class="nav-link active" data-scroll-target="#migrating-to-0.5.0">Migrating to 0.5.0</a>
-  <ul class="collapse">
-  <li><a href="#defunct-optimisers" id="toc-defunct-optimisers" class="nav-link" data-scroll-target="#defunct-optimisers">Defunct optimisers</a></li>
-  <li><a href="#momentum-is-folded-into-gradient_descent" id="toc-momentum-is-folded-into-gradient_descent" class="nav-link" data-scroll-target="#momentum-is-folded-into-gradient_descent"><code>momentum()</code> is folded into <code>gradient_descent()</code></a></li>
-  <li><a href="#rms_prop-renames-decay-to-rho" id="toc-rms_prop-renames-decay-to-rho" class="nav-link" data-scroll-target="#rms_prop-renames-decay-to-rho"><code>rms_prop()</code> renames <code>decay</code> to <code>rho</code></a></li>
-  <li><a href="#other-things-that-may-affect-you" id="toc-other-things-that-may-affect-you" class="nav-link" data-scroll-target="#other-things-that-may-affect-you">Other things that may affect you</a></li>
-  </ul></li>
-  <li><a href="#why-tensorflow-2" id="toc-why-tensorflow-2" class="nav-link" data-scroll-target="#why-tensorflow-2">Why TensorFlow 2</a></li>
-  <li><a href="#new-optimiser-options" id="toc-new-optimiser-options" class="nav-link" data-scroll-target="#new-optimiser-options">New optimiser options</a></li>
-  <li><a href="#installation-revamp" id="toc-installation-revamp" class="nav-link" data-scroll-target="#installation-revamp">Installation revamp</a></li>
-  <li><a href="#better-printing" id="toc-better-printing" class="nav-link" data-scroll-target="#better-printing">Better printing</a></li>
-  <li><a href="#minor-improvements" id="toc-minor-improvements" class="nav-link" data-scroll-target="#minor-improvements">Minor improvements</a></li>
-  <li><a href="#what-this-unlocks" id="toc-what-this-unlocks" class="nav-link" data-scroll-target="#what-this-unlocks">What this unlocks</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#tf-version-2" id="toc-tf-version-2" class="nav-link active" data-scroll-target="#tf-version-2">TF version 2</a></li>
+  <li><a href="#what-changed-for-greta" id="toc-what-changed-for-greta" class="nav-link" data-scroll-target="#what-changed-for-greta">What changed for greta</a></li>
+  <li><a href="#new-features-in-greta" id="toc-new-features-in-greta" class="nav-link" data-scroll-target="#new-features-in-greta">New features in greta</a></li>
+  <li><a href="#upcoming-features-in-greta" id="toc-upcoming-features-in-greta" class="nav-link" data-scroll-target="#upcoming-features-in-greta">Upcoming features in greta</a></li>
   </ul>
 </nav>
     </div>
@@ -255,134 +200,28 @@ background: #a379cc;
 
 
 
-<div class="lead">
-<p><strong>We are thrilled to announce the release of greta 0.5.0.</strong> greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.</p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"greta"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This release has been a long time in the making: greta now runs on TensorFlow 2. For most users, the models you write should work exactly as they did before. But this was a substantial internal change, and it comes with a reworked optimiser interface, a much better installation experience, and nicer printing. You can see the full list of changes in the <a href="https://greta-dev.github.io/greta/news/index.html">release notes</a>.</p>
-<p>Below we cover what you may need to change, and then what is new. We will refer to TensorFlow as TF from here on.</p>
-<section id="migrating-to-0.5.0" class="level2">
-<h2 class="anchored" data-anchor-id="migrating-to-0.5.0">Migrating to 0.5.0</h2>
-<section id="defunct-optimisers" class="level3">
-<h3 class="anchored" data-anchor-id="defunct-optimisers">Defunct optimisers</h3>
-<p>TensorFlow no longer supports a number of the optimisers greta used to expose, so these are now defunct:</p>
-<p><code>powell()</code>, <code>cg()</code>, <code>newton_cg()</code>, <code>l_bfgs_b()</code>, <code>tnc()</code>, <code>cobyla()</code>, and <code>slsqp()</code>.</p>
-<p>These functions still exist, so calling one gives you a proper error rather than “could not find function”:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">opt</span>(m, <span class="at">optimiser =</span> <span class="fu">slsqp</span>())</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error:</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! The optimiser, `slsqp()`, is defunct and has been removed in greta 0.5.0.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Please use a different optimiser.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; See `?optimisers` for detail on which optimizers are removed.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If you were using one of these, switch to one of the optimisers that remain, such as <code>adam()</code> or <code>gradient_descent()</code>. See <code>?optimisers</code> for the full list.</p>
+<p>We are happy to say that greta version 0.5.0 is on CRAN!</p>
+<p>This particular release has been a long time in the making, as it uses tensorflow version 2. We’ll refer to Tensor Flow as TF hereafter. The overall impact on <code>greta</code> users should be very minimal, but internally we have made substantial changes, and we wanted an opportunity to discuss the reasons why we needed to do this, and what this means for greta going forward.</p>
+<section id="tf-version-2" class="level2">
+<h2 class="anchored" data-anchor-id="tf-version-2">TF version 2</h2>
+<p>Google released TF version 2 in … 2019. This was a big change in the user interface to TF, as it changed from what was called “graph mode” to “eager mode”. Briefly, eager mode is ..</p>
 </section>
-<section id="momentum-is-folded-into-gradient_descent" class="level3">
-<h3 class="anchored" data-anchor-id="momentum-is-folded-into-gradient_descent"><code>momentum()</code> is folded into <code>gradient_descent()</code></h3>
-<p>The standalone <code>momentum()</code> optimiser is also defunct. Momentum is now an argument to <code>gradient_descent()</code>, which also gains <code>nesterov</code>:</p>
-<p><strong>Before:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">opt</span>(m, <span class="at">optimiser =</span> <span class="fu">momentum</span>(<span class="at">learning_rate =</span> <span class="fl">0.01</span>, <span class="at">momentum =</span> <span class="fl">0.9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>After:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">opt</span>(m, <span class="at">optimiser =</span> <span class="fu">gradient_descent</span>(<span class="at">learning_rate =</span> <span class="fl">0.01</span>, <span class="at">momentum =</span> <span class="fl">0.9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="what-changed-for-greta" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed-for-greta">What changed for greta</h2>
+<p>A lot. And also, not much. Internally we had to change a very large amount of the code insidie of greta, as changing from graph based execution to eager execution meant that</p>
 </section>
-<section id="rms_prop-renames-decay-to-rho" class="level3">
-<h3 class="anchored" data-anchor-id="rms_prop-renames-decay-to-rho"><code>rms_prop()</code> renames <code>decay</code> to <code>rho</code></h3>
-<p><strong>Before:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">opt</span>(m, <span class="at">optimiser =</span> <span class="fu">rms_prop</span>(<span class="at">decay =</span> <span class="fl">0.9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>After:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">opt</span>(m, <span class="at">optimiser =</span> <span class="fu">rms_prop</span>(<span class="at">rho =</span> <span class="fl">0.9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>rms_prop()</code> also gains a <code>centered</code> argument, matching <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/RMSprop">the TF documentation</a>.</p>
+<section id="new-features-in-greta" class="level2">
+<h2 class="anchored" data-anchor-id="new-features-in-greta">New features in greta</h2>
 </section>
-<section id="other-things-that-may-affect-you" class="level3">
-<h3 class="anchored" data-anchor-id="other-things-that-may-affect-you">Other things that may affect you</h3>
+<section id="upcoming-features-in-greta" class="level2">
+<h2 class="anchored" data-anchor-id="upcoming-features-in-greta">Upcoming features in greta</h2>
+<p>Now that we’ve implemented TF2 in greta, we can start taking advantage of the new features inside TF and implement them in greta. Here’s a list of some of the new features you can expect in the future</p>
 <ul>
-<li>greta now requires R 4.1.0 or later.</li>
-<li><code>install_greta_deps()</code> no longer takes <code>method</code>, <code>conda</code>, or <code>manual</code> arguments; the first two were never used.</li>
-<li>The <code>greta_nodes_install_*()</code> and <code>greta_nodes_conda_*()</code> options are defunct.</li>
+<li>No U-turn Sampler</li>
+<li>Faster Tuning</li>
+<li>Marginalisation interface</li>
+<li></li>
 </ul>
-</section>
-</section>
-<section id="why-tensorflow-2" class="level2">
-<h2 class="anchored" data-anchor-id="why-tensorflow-2">Why TensorFlow 2</h2>
-<p>Google released TF 2 in September 2019. The headline change was how TF executes code. TF 1 used what was called “graph mode”: you described a static computation graph up front, then handed it to a session to run. TF 2 uses “eager mode” instead, where operations are evaluated immediately as they are called, much like ordinary R or Python code. Graphs did not go away, but they became something you opt into for performance rather than the only way to work.</p>
-<p>For greta this was both a large change and a small one. Internally, a great deal of code had to change, because greta’s whole approach is to build up a graph of your model and then hand it to TF. Moving from graph-based execution to eager execution meant rewriting how that graph is constructed and evaluated. Outwardly, though, the greta code you write is the same:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(greta)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># data</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as_data</span>(iris<span class="sc">$</span>Petal.Length)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as_data</span>(iris<span class="sc">$</span>Sepal.Length)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># priors</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>int <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">3</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">lognormal</span>(<span class="dv">0</span>, <span class="dv">3</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># likelihood</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> int <span class="sc">+</span> coef <span class="sc">*</span> x</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">distribution</span>(y) <span class="ot">&lt;-</span> <span class="fu">normal</span>(mu, sd)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">model</span>(int, coef, sd)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(m, <span class="at">n_samples =</span> <span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The reason for going through all of this is that TF 1 was reaching end of life, and staying on it meant greta could not use anything new. Being on TF 2 puts greta back on a supported foundation.</p>
-</section>
-<section id="new-optimiser-options" class="level2">
-<h2 class="anchored" data-anchor-id="new-optimiser-options">New optimiser options</h2>
-<p>Moving to the current TF optimiser interface also brought new options:</p>
-<ul>
-<li><code>gradient_descent()</code> gains <code>momentum</code> and <code>nesterov</code> arguments (<a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/SGD">docs</a>).</li>
-<li><code>adagrad()</code> gains an <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adagrad"><code>epsilon</code> argument</a>.</li>
-<li><code>adam()</code> gains an <code>amsgrad</code> argument (<a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adam">docs</a>).</li>
-<li><code>ftrl()</code> gains <code>l2_shrinkage_regularization_strength</code> and <code>beta</code>.</li>
-<li>Two new optimisers: <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adamax"><code>adamax()</code></a> and <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Nadam"><code>nadam()</code></a>.</li>
-</ul>
-</section>
-<section id="installation-revamp" class="level2">
-<h2 class="anchored" data-anchor-id="installation-revamp">Installation revamp</h2>
-<p>Installation should now tell you more about what it is doing, and fail more gracefully when something goes wrong. The intention is that it should <em>just work</em>, and if it does not, that you get useful advice about where to look.</p>
-<p>The new <code>greta_deps_spec()</code> gives you one object for specifying which versions you want, rather than a scattering of arguments:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install_greta_deps</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">deps =</span> <span class="fu">greta_deps_spec</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tf_version =</span> <span class="st">"2.15.1"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">tfp_version =</span> <span class="st">"0.23.0"</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="st">"3.11"</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Not every combination of TF, TF Probability, and Python works together, so greta now checks your request against a table of known-good combinations, shipped as the <code>greta_deps_tf_tfp</code> dataset. If you ask for something that will not work, greta tells you before it starts installing rather than after.</p>
-<p>Alongside this:</p>
-<ul>
-<li>Installation now writes to a single log file. Set its location with <code>greta_set_install_logfile()</code>, write it with <code>write_greta_install_log()</code>, and open it with <code>open_greta_install_log()</code>. The log goes to a sensible per-user location via <code>tools::R_user_dir()</code>, so it can always be found.</li>
-<li><code>destroy_greta_deps()</code> removes miniconda and greta’s Python conda environment, for when you want to start over completely.</li>
-<li><code>greta_deps_receipt()</code> reports the TF, TF Probability, and Python versions actually installed, without validating them against greta’s supported range. This means it still works when you have something newer than greta officially supports.</li>
-<li><code>install_greta_deps()</code> and <code>reinstall_greta_deps()</code> gain a <code>restart</code> argument to restart R for you once installation finishes.</li>
-<li>Installation processes now have a default five minute timeout, so a stalled install does not hang forever.</li>
-<li><code>greta_sitrep()</code> now checks for installations of Python, TF, and TF Probability.</li>
-</ul>
-</section>
-<section id="better-printing" class="level2">
-<h2 class="anchored" data-anchor-id="better-printing">Better printing</h2>
-<p>MCMC output and greta arrays both used to flood the console. They now have print methods that keep things to a readable size, and you can control how much you see with the <code>n</code> argument:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(draws, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="minor-improvements" class="level2">
-<h2 class="anchored" data-anchor-id="minor-improvements">Minor improvements</h2>
-<ul>
-<li>The slice sampler no longer requires <code>precision = "single"</code> to work.</li>
-<li><code>is.greta_array()</code> and <code>is.greta_mcmc_list()</code> are now exported.</li>
-<li>Fixes to the Wishart and LKJ correlation distributions, including a bug where the log probability could return <code>NaN</code>, and a fix for <code>lkj_correlation()</code> so that it now works with unknown dimensions.</li>
-<li>A fix for a dimension error in matrix multiplication that occurred before coercing to a greta array.</li>
-</ul>
-</section>
-<section id="what-this-unlocks" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-unlocks">What this unlocks</h2>
-<p>Now that greta is on TF 2, we can start taking advantage of what is available in modern TF and TF Probability. Some of the things we would like to explore:</p>
-<ul>
-<li>the No-U-Turn Sampler (NUTS)</li>
-<li>faster tuning during warmup</li>
-<li>an interface for marginalisation</li>
-</ul>
-</section>
-<section id="acknowledgements" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>A big thank you to all the folks who helped make this release happen:</p>
-<p><a href="https://github.com/AugustHao">@AugustHao</a>, <a href="https://github.com/geryan">@geryan</a>, <a href="https://github.com/goldingn">@goldingn</a>, and <a href="https://github.com/wiligl">@wiligl</a>.</p>
 
 
 </section>

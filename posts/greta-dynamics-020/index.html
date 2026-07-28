@@ -7,10 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nicholas Tierney">
-<meta name="dcterms.date" content="2026-07-21">
-<meta name="description" content="greta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover the iterate_dynamic_matrix() and iterate_dynamic_function() features from 0.2.2.">
+<meta name="dcterms.date" content="2022-09-06">
 
-<title>greta.dynamics 0.2.3 – greta blog</title>
+<title>greta.dynamics 0.2.0 – greta blog</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -28,41 +27,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -131,12 +95,8 @@ background: #a379cc;
 </style>
 
 
-<meta property="og:title" content="greta.dynamics 0.2.3 – greta blog">
-<meta property="og:description" content="greta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover the iterate_dynamic_matrix() and iterate_dynamic_function() features from 0.2.2.">
+<meta property="og:title" content="greta.dynamics 0.2.0 – greta blog">
 <meta property="og:site_name" content="greta blog">
-<meta name="twitter:title" content="greta.dynamics 0.2.3 – greta blog">
-<meta name="twitter:description" content="greta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover the iterate_dynamic_matrix() and iterate_dynamic_function() features from 0.2.2.">
-<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -188,15 +148,9 @@ background: #a379cc;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">greta.dynamics 0.2.3</h1>
-                  <div>
-        <div class="description">
-          <p>greta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover the iterate_dynamic_matrix() and iterate_dynamic_function() features from 0.2.2.</p>
-        </div>
-      </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">greta.dynamics</div>
-                <div class="quarto-category">release</div>
+      <h1 class="title">greta.dynamics 0.2.0</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">greta.gp</div>
               </div>
                   </div>
   </div>
@@ -214,7 +168,7 @@ background: #a379cc;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">July 21, 2026</p>
+        <p class="date">September 6, 2022</p>
       </div>
     </div>
     
@@ -225,19 +179,8 @@ background: #a379cc;
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#back-on-cran" id="toc-back-on-cran" class="nav-link active" data-scroll-target="#back-on-cran">Back on CRAN</a></li>
-  <li><a href="#what-greta.dynamics-does" id="toc-what-greta.dynamics-does" class="nav-link" data-scroll-target="#what-greta.dynamics-does">What greta.dynamics does</a></li>
-  <li><a href="#matrices-that-change-as-they-iterate" id="toc-matrices-that-change-as-they-iterate" class="nav-link" data-scroll-target="#matrices-that-change-as-they-iterate">Matrices that change as they iterate</a></li>
-  <li><a href="#breaking-change-in-0.2.2-ode-solvers" id="toc-breaking-change-in-0.2.2-ode-solvers" class="nav-link" data-scroll-target="#breaking-change-in-0.2.2-ode-solvers">Breaking change in 0.2.2: ODE solvers</a></li>
-  <li><a href="#documentation-fixes-in-0.2.3" id="toc-documentation-fixes-in-0.2.3" class="nav-link" data-scroll-target="#documentation-fixes-in-0.2.3">Documentation fixes in 0.2.3</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -246,80 +189,8 @@ background: #a379cc;
 
 
 
-<div class="lead">
-<p><strong>We are pleased to announce the release of greta.dynamics 0.2.3.</strong> greta.dynamics is a greta extension for analysing dynamical systems: transition matrices you iterate to a stable state, and ordinary differential equations you solve.</p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"greta.dynamics"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is the first post about greta.dynamics on this blog, so rather than only covering what changed in 0.2.3, we will introduce the package and cover the features added in 0.2.2 as well. You can see the full list of changes in the <a href="https://github.com/greta-dev/greta.dynamics/blob/main/NEWS.md">release notes</a>.</p>
-<section id="back-on-cran" class="level2">
-<h2 class="anchored" data-anchor-id="back-on-cran">Back on CRAN</h2>
-<p>greta.dynamics was archived from CRAN in September 2025, as a consequence of its dependency, greta, being archived. greta 0.6.0 <a href="../2026-07-greta-0-6-0/">returned to CRAN in July 2026</a>, which unblocked this resubmission. greta.dynamics now requires greta 0.6.0 or later.</p>
-</section>
-<section id="what-greta.dynamics-does" class="level2">
-<h2 class="anchored" data-anchor-id="what-greta.dynamics-does">What greta.dynamics does</h2>
-<p>The package gives you two families of tools, both of which produce greta arrays you can use inside a larger greta model.</p>
-<p><strong>Transition matrices.</strong> If you have a matrix describing how a structured population moves between stages from one timestep to the next, you often want to know where it settles: the stable stage distribution and the growth rate. <code>iterate_matrix()</code> iterates a fixed transition matrix until it converges.</p>
-<p><strong>Differential equations.</strong> <code>ode_solve()</code> solves a system of ODEs, given a derivative function, an initial state, and the times you want solutions at.</p>
-<p>Because the results are greta arrays, the interesting part is that all of this can sit inside a model where the matrix entries or ODE parameters are themselves things you are estimating.</p>
-</section>
-<section id="matrices-that-change-as-they-iterate" class="level2">
-<h2 class="anchored" data-anchor-id="matrices-that-change-as-they-iterate">Matrices that change as they iterate</h2>
-<p>The main feature added in 0.2.2 was a pair of functions for systems where the transition matrix is not constant.</p>
-<p><code>iterate_dynamic_matrix()</code> takes a <em>function</em> that returns a transition matrix, rather than a fixed matrix. That function is handed the current state and the iteration number, so the matrix can depend on both. This is how you express density dependence: a population whose survival or fecundity changes as the population itself grows.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(greta)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(greta.dynamics)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># a transition matrix that is constant across iterations. Its columns sum to</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># one, so the total population size is conserved and the two stages converge</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># on a stable ratio of 2:1</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>matrix_function <span class="ot">&lt;-</span> <span class="cf">function</span>(state, iter) {</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  mat <span class="ot">&lt;-</span> <span class="fu">zeros</span>(<span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  mat[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  mat[<span class="dv">1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  mat[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  mat[<span class="dv">2</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  mat</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># start away from the stable state, so the iteration has work to do</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>initial_state <span class="ot">&lt;-</span> <span class="fu">as_data</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">20</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">1</span>))</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">iterate_dynamic_matrix</span>(</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_function =</span> matrix_function,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial_state =</span> initial_state,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">100</span>,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">tol =</span> <span class="fl">1e-6</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># the population size after the final iteration, and whether the iteration</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># converged before hitting `niter`</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate</span>(results<span class="sc">$</span>stable_population, results<span class="sc">$</span>converged, results<span class="sc">$</span>iterations)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>iterate_dynamic_function()</code> is the more general version: instead of returning a matrix, your function returns the next state directly. That covers transitions that are not expressible as a matrix multiply.</p>
-<p>Both return whether the iteration converged and how many iterations it took, so you can check that <code>niter</code> was high enough, rather than silently accepting a result that had not settled.</p>
-</section>
-<section id="breaking-change-in-0.2.2-ode-solvers" class="level2">
-<h2 class="anchored" data-anchor-id="breaking-change-in-0.2.2-ode-solvers">Breaking change in 0.2.2: ODE solvers</h2>
-<p>If you are coming from an older version, the one thing to be aware of is that <code>ode_solve()</code> changed its solver options in 0.2.2, to match the current TensorFlow Probability API. There are now two solvers:</p>
-<ul>
-<li><code>"dp"</code> (the default), the Dormand-Prince explicit solver for non-stiff problems. This is similar to deSolve’s <code>"ode45"</code>.</li>
-<li><code>"bdf"</code>, a Backward Differentiation Formula solver, for stiff problems.</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ode_solve</span>(derivative, <span class="at">y0 =</span> y0, <span class="at">times =</span> times, <span class="at">method =</span> <span class="st">"bdf"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Solver-specific arguments cannot currently be set.</p>
-</section>
-<section id="documentation-fixes-in-0.2.3" class="level2">
-<h2 class="anchored" data-anchor-id="documentation-fixes-in-0.2.3">Documentation fixes in 0.2.3</h2>
-<p>Two documentation problems are fixed in this release.</p>
-<p>The <code>@return</code> documentation for <code>iterate_matrix()</code>, <code>iterate_dynamic_matrix()</code>, and <code>iterate_dynamic_function()</code> referred to a list element called <code>stable_state</code>, which none of these functions actually return. The docs now use the real names: <code>stable_distribution</code> for <code>iterate_matrix()</code>, and <code>stable_population</code> for the other two. If you had been writing <code>results$stable_state</code> and getting <code>NULL</code>, this is why.</p>
-<p><code>iterate_dynamic_matrix()</code> and <code>iterate_dynamic_function()</code> also previously had no examples at all. Both now have worked examples, like the one above.</p>
-</section>
-<section id="acknowledgements" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>A big thank you to all the folks who helped make this release happen:</p>
-<p><a href="https://github.com/goldingn">@goldingn</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

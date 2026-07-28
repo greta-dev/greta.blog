@@ -8,9 +8,8 @@
 
 <meta name="author" content="Nicholas Tierney">
 <meta name="dcterms.date" content="2022-09-12">
-<meta name="description" content="greta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.">
 
-<title>greta 0.4.3 – greta blog</title>
+<title>greta version 0.4.3 – greta blog</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -28,41 +27,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -131,12 +95,9 @@ background: #a379cc;
 </style>
 
 
-<meta property="og:title" content="greta 0.4.3 – greta blog">
-<meta property="og:description" content="greta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.">
+<meta property="og:title" content="greta version 0.4.3 – greta blog">
+<meta property="og:description" content="News, releases, and stories from the greta project — statistical modelling in R.">
 <meta property="og:site_name" content="greta blog">
-<meta name="twitter:title" content="greta 0.4.3 – greta blog">
-<meta name="twitter:description" content="greta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.">
-<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -188,15 +149,9 @@ background: #a379cc;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">greta 0.4.3</h1>
-                  <div>
-        <div class="description">
-          <p>greta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.</p>
-        </div>
-      </div>
-                          <div class="quarto-categories">
+      <h1 class="title">greta version 0.4.3</h1>
+                                <div class="quarto-categories">
                 <div class="quarto-category">greta</div>
-                <div class="quarto-category">release</div>
               </div>
                   </div>
   </div>
@@ -225,16 +180,8 @@ background: #a379cc;
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#starting-installation-from-a-clean-slate" id="toc-starting-installation-from-a-clean-slate" class="nav-link active" data-scroll-target="#starting-installation-from-a-clean-slate">Starting installation from a clean slate</a></li>
-  <li><a href="#fixes-for-single-core-machines" id="toc-fixes-for-single-core-machines" class="nav-link" data-scroll-target="#fixes-for-single-core-machines">Fixes for single-core machines</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -243,30 +190,9 @@ background: #a379cc;
 
 
 
-<div class="lead">
-<p><strong>We are pleased to announce the release of greta 0.4.3.</strong> greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.</p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"greta"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is a small maintenance release, focused on installation and on making greta behave properly on machines with a single core. You can see the full list of changes in the <a href="https://greta-dev.github.io/greta/news/index.html">release notes</a>.</p>
-<section id="starting-installation-from-a-clean-slate" class="level2">
-<h2 class="anchored" data-anchor-id="starting-installation-from-a-clean-slate">Starting installation from a clean slate</h2>
-<p>Most installation problems in greta come down to a Python environment that has ended up in an odd state, and the fastest way out is usually to start again. The new <code>reinstall_greta_deps()</code> does exactly that: it removes greta’s existing Python dependencies and installs them fresh, in one step.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(greta)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">reinstall_greta_deps</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Previously this meant removing the conda environment and miniconda yourself before re-running <code>install_greta_deps()</code>, which was easy to get half-right.</p>
-</section>
-<section id="fixes-for-single-core-machines" class="level2">
-<h2 class="anchored" data-anchor-id="fixes-for-single-core-machines">Fixes for single-core machines</h2>
-<p>greta uses the <a href="https://future.futureverse.org/">future</a> package to run MCMC chains in parallel. On a machine with only one core available, future and <a href="https://parallelly.futureverse.org/">parallelly</a> would raise an error rather than simply running the chains one after another. That is now fixed, so greta works on single-core machines, including some continuous integration runners and smaller cloud instances.</p>
-<p>We have also removed all internal use of future’s <code>multiprocess</code> plan, which was deprecated upstream, so you will no longer see deprecation warnings from future when running <code>mcmc()</code>.</p>
-</section>
-<section id="acknowledgements" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>A big thank you to all the folks who helped make this release happen:</p>
-<p><a href="https://github.com/assignUser">@assignUser</a>, <a href="https://github.com/goldingn">@goldingn</a>, <a href="https://github.com/HenrikBengtsson">@HenrikBengtsson</a>, <a href="https://github.com/hrlai">@hrlai</a>, <a href="https://github.com/olivuntu">@olivuntu</a>, and <a href="https://github.com/zhiiiyang">@zhiiiyang</a>.</p>
+<p>We are happy to say that greta version 0.4.3 is now on CRAN</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
