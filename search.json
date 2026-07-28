@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "greta blog",
     "section": "",
-    "text": "Welcome to the greta blog, where we share release notes, worked examples, and news from across the greta family of packages. Browse the latest posts below.\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.dynamics 0.2.3\n\n4 min\n\n\ngreta.dynamics\n\nrelease\n\n\n\ngreta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover…\n\n\n\nNicholas Tierney\n\n\nJul 21, 2026\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.5.0\n\n5 min\n\n\ngreta\n\nrelease\n\ntf2\n\n\n\ngreta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.\n\n\n\nNicholas Tierney\n\n\nNov 10, 2024\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.4.3\n\n2 min\n\n\ngreta\n\nrelease\n\n\n\ngreta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.\n\n\n\nNicholas Tierney\n\n\nSep 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.gp 0.2.0\n\n2 min\n\n\ngreta.gp\n\nrelease\n\n\n\ngreta.gp 0.2.0 is on CRAN. greta.gp provides a syntax for creating and combining Gaussian process kernels in greta, which you can then use to define either full rank or…\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to the greta blog, where we share release notes, worked examples, and news from across the greta family of packages. Browse the latest posts below.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.6.0\n\n9 min\n\n\ngreta\n\nrelease\n\n\n\ngreta 0.6.0 is back on CRAN, with a ground-up rebuild of the Python installation experience: uv-managed and automatic, works offline, and lets you choose your backend with…\n\n\n\nNicholas Tierney\n\n\nJul 29, 2026\n\n\n\n\n\n\n\n\n\n\n\ngreta.dynamics 0.2.3\n\n4 min\n\n\ngreta.dynamics\n\nrelease\n\n\n\ngreta.dynamics is back on CRAN alongside greta 0.6.0. Since this is the start of the greta blog, we also introduce what the package does, and cover…\n\n\n\nNicholas Tierney\n\n\nJul 21, 2026\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.5.0\n\n5 min\n\n\ngreta\n\nrelease\n\ntf2\n\n\n\ngreta 0.5.0 moves greta onto TensorFlow 2. The modelling code you write is unchanged, but the optimiser interface, installation, and print methods all got an overhaul.\n\n\n\nNicholas Tierney\n\n\nNov 10, 2024\n\n\n\n\n\n\n\n\n\n\n\ngreta 0.4.3\n\n2 min\n\n\ngreta\n\nrelease\n\n\n\ngreta 0.4.3 adds reinstall_greta_deps() for starting installation from a clean slate, and fixes a couple of parallelism bugs on single-core machines.\n\n\n\nNicholas Tierney\n\n\nSep 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\ngreta.gp 0.2.0\n\n2 min\n\n\ngreta.gp\n\nrelease\n\n\n\ngreta.gp 0.2.0 is on CRAN. greta.gp provides a syntax for creating and combining Gaussian process kernels in greta, which you can then use to define either full rank or…\n\n\n\nNicholas Tierney\n\n\nSep 6, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/greta-gp-020/index.html",
@@ -89,6 +89,90 @@
     "title": "greta.dynamics 0.2.3",
     "section": "Acknowledgements",
     "text": "Acknowledgements\nA big thank you to all the folks who helped make this release happen:\n@goldingn."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html",
+    "href": "posts/2026-07-greta-0-6-0/index.html",
+    "title": "greta 0.6.0",
+    "section": "",
+    "text": "NoteA note on AI assistance\n\n\n\nWe are now using Claude Code, with the Opus and Fable models, to help resolve some long-standing issues in greta. We also used Claude Code to draft this post from the 0.6.0 NEWS file. It was then edited by greta’s maintainer, Nick Tierney.\ngreta was archived from CRAN in late 2025, so the headline news is simply that it is back. Getting there meant rebuilding how greta manages its Python dependencies, which is the bulk of this release. You can see the full list of changes in the release notes."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#the-short-version",
+    "href": "posts/2026-07-greta-0-6-0/index.html#the-short-version",
+    "title": "greta 0.6.0",
+    "section": "The short version",
+    "text": "The short version\n\ngreta 0.6.0 is on CRAN again.\nThe Python dependencies are now installed automatically via uv on first use, so install_greta_deps() is no longer a required step for most people.\nIt works offline. Once uv’s cache is populated, greta can start up without an internet connection.\nYou can choose your Python backend, persistently, with greta_set_python(), and pin your dependency versions with greta_set_deps().\nmcmc() now defaults to two chains on two cores, where it previously used four chains. If you relied on the old defaults, set them explicitly.\nA scattering of removal and reinstall helpers have been consolidated behind greta_remove() and reinstall_greta_deps().\n\nBecause greta is back, its three extension packages can return to CRAN too. greta.gp and greta.dynamics are already there, both at version 0.2.3, and greta.gam is on its way."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#why-greta-was-archived",
+    "href": "posts/2026-07-greta-0-6-0/index.html#why-greta-was-archived",
+    "title": "greta 0.6.0",
+    "section": "Why greta was archived",
+    "text": "Why greta was archived\ngreta sits on top of TensorFlow and TensorFlow Probability, which are Python libraries. You can think of them a little like highly optimised linear algebra engines: they are a big part of what makes greta fast and expressive, and they are how greta fits MCMC efficiently. But they also mean greta has to manage a Python installation, and getting the right combination of package versions in place has been a genuinely hard problem.\nThat caused two problems on CRAN. greta used more than two cores by default, and it could reach out to install TensorFlow and TensorFlow Probability onto the machine running the checks. Both come back to the same underlying issue: managing greta’s Python dependencies well.\nPreviously, we leaned on conda and a curated table of “known good” version combinations. The install_greta_deps() function did a good job of setting all of this up, most of the time. When it worked, it was lovely. When it did not, installation could get complicated quickly.\nMore recently, reticulate gained a fast new environment manager built on uv, which changes what a good installation experience can look like. Rebuilding greta’s installation around it is the heart of this release."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#installation-that-just-works",
+    "href": "posts/2026-07-greta-0-6-0/index.html#installation-that-just-works",
+    "title": "greta 0.6.0",
+    "section": "Installation that just works",
+    "text": "Installation that just works\ngreta now installs TensorFlow and TensorFlow Probability automatically via uv the first time you use it. You no longer need to run install_greta_deps() as a separate step before you can build a model:\nlibrary(greta)\n\n# on first use, greta sets up its Python environment for you\nx &lt;- normal(0, 1)\nm &lt;- model(x)\ndraws &lt;- mcmc(m, n_samples = 100)\nJust as importantly, greta is now flexible about which Python environment it uses. Instead of always forcing one managed environment, greta resolves its backend in order:\n\na user-set RETICULATE_PYTHON,\na stored greta preference (see below),\nan existing greta-env-tf2 conda environment,\notherwise, the managed uv environment.\n\nSo you get convenience by default, without giving up control."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#choosing-your-python-backend",
+    "href": "posts/2026-07-greta-0-6-0/index.html#choosing-your-python-backend",
+    "title": "greta 0.6.0",
+    "section": "Choosing your Python backend",
+    "text": "Choosing your Python backend\ngreta_set_python() records which Python environment greta should use, and the preference persists across sessions. You can pick the managed uv environment, a conda environment, or a specific Python:\n# the default: reticulate's managed uv environment\ngreta_set_python(\"uv\")\n\n# an existing conda environment\ngreta_set_python(\"conda\", name = \"greta-env-tf2\")\n\n# a specific interpreter, or an environment directory\ngreta_set_python(\"path\", path = \"~/.virtualenvs/greta/bin/python\")\ngreta_set_python(\"path\", path = \"~/.virtualenvs/greta\")\nThat last pair is worth calling out: greta_set_python(\"path\", ...) accepts either a Python binary or an environment directory (a virtualenv or conda prefix), looking for bin/python (or Scripts/python.exe on Windows) inside it. This makes pre-installed and offline setups easier to wire up.\nEach call reports the preference it stored, warns you if RETICULATE_PYTHON will take precedence over it, and shows what greta will resolve to on its next load. To clear the preference and go back to automatic resolution, use greta_reset_python()."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#offline-support",
+    "href": "posts/2026-07-greta-0-6-0/index.html#offline-support",
+    "title": "greta 0.6.0",
+    "section": "Offline support",
+    "text": "Offline support\nThe managed uv backend now works without an internet connection. Once reticulate’s uv cache is populated, greta enables uv’s offline mode, so it can start up on a plane, behind a locked-down corporate firewall, or on an air-gapped compute node.\nIf you want to be explicit, set the UV_OFFLINE environment variable to force the behaviour you want:\n# force offline resolution\nSys.setenv(UV_OFFLINE = 1)\n\n# force online resolution\nSys.setenv(UV_OFFLINE = 0)"
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#pinning-your-dependency-versions",
+    "href": "posts/2026-07-greta-0-6-0/index.html#pinning-your-dependency-versions",
+    "title": "greta 0.6.0",
+    "section": "Pinning your dependency versions",
+    "text": "Pinning your dependency versions\ngreta_set_deps() persistently pins which TensorFlow, TensorFlow Probability, and Python versions greta should use. The managed environment installs them on next load, and install_greta_deps() picks them up as its default:\ngreta_set_deps(\n  greta_deps_spec(\n    tf_version = \"2.15.1\",\n    tfp_version = \"0.23.0\",\n    python_version = \"3.11\"\n  )\n)\nClear the pins with greta_remove(\"deps\").\ngreta_deps_spec() is also less rigid than it used to be. It no longer validates every requested combination against a fixed compatibility table. It now checks only that the requested TensorFlow version is one greta supports, and leaves the rest for uv or conda to resolve. Fewer surprises, and less maintenance of a table that goes stale.\n\n\n\n\n\n\nNoteTwo different TensorFlow versions\n\n\n\ngreta depends on the R package tensorflow, and separately on the Python library TensorFlow. These are versioned independently, and 0.6.0 changed both.\ngreta’s DESCRIPTION previously required the R package at exactly == 2.16.0, which is brittle by design; it now accepts &gt;= 2.16.0.\nThe Python library is a different story: greta supports Python TensorFlow up to 2.15.x. TensorFlow 2.16 and later ship Keras 3, which greta does not yet support, so greta_deps_spec(tf_version = \"2.16.0\") will tell you so rather than installing something that will not work."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#seeing-what-greta-will-do",
+    "href": "posts/2026-07-greta-0-6-0/index.html#seeing-what-greta-will-do",
+    "title": "greta 0.6.0",
+    "section": "Seeing what greta will do",
+    "text": "Seeing what greta will do\ngreta_sitrep() has grown to match all of this. It reports the resolved Python backend and whether greta can start offline, including the UV_OFFLINE setting and whether the uv cache is populated, so you can see at a glance what greta will do on its next load. A missing conda environment is now reported neutrally as “not used” on the uv backend, rather than as a failure.\nIt also gains a verbosity argument, with three levels of detail:\ngreta_sitrep()                          # \"minimal\", the default\ngreta_sitrep(verbosity = \"detailed\")    # everything\ngreta_sitrep(verbosity = \"quiet\")       # just the essentials\nIf you are debugging a conda setup, greta_list_py_modules() shows the Python packages installed in a given TF2 environment."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#lifecycle-changes",
+    "href": "posts/2026-07-greta-0-6-0/index.html#lifecycle-changes",
+    "title": "greta 0.6.0",
+    "section": "Lifecycle changes",
+    "text": "Lifecycle changes\nWe consolidated a scattering of removal and reinstall helpers. greta_remove() is now the single front door for cleaning up. One what argument covers every case:\ngreta_remove(\"env\")         # the greta-env-tf2 conda environment\ngreta_remove(\"miniconda\")   # miniconda\ngreta_remove(\"uv_cache\")    # reticulate's uv cache\ngreta_remove(\"preference\")  # your stored Python preference\ngreta_remove(\"deps\")        # your stored dependency versions\ngreta_remove(\"all\")         # all of the above\n\nSuperseded by greta_remove(): destroy_greta_deps(), greta_remove_all_deps(), remove_greta_env(), remove_miniconda(), and remove_reticulate_uv_cache().\nDeprecated in favour of reinstall_greta_deps(): reinstall_greta_env() and reinstall_miniconda().\nBehaviour change: n_cores now defaults to 2 and chains defaults to 2. If you ask for more cores than you have, greta uses what is actually available. This keeps greta polite on CRAN’s two-core check machines, and on laptops. If you were relying on the old default of four chains, pass chains = 4 explicitly.\n\ngreta_remove() also no longer leaves a stale, deleted environment active for the rest of the session. It invalidates greta’s cached Python backend and nudges you to restart R, instead of silently failing or reporting the removed environment as still available. The older remove_*() functions now ask for confirmation before removing, gain an ask argument (defaulting to interactive()) so they work in scripts, and invisibly return whether anything was actually removed.\nOne note on remove_reticulate_uv_cache(): that cache is shared by all reticulate packages and is not greta-specific. A system-wide uv cache is left untouched."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#other-changes",
+    "href": "posts/2026-07-greta-0-6-0/index.html#other-changes",
+    "title": "greta 0.6.0",
+    "section": "Other changes",
+    "text": "Other changes\nA few smaller things make everyday modelling nicer:\n\nClearer MCMC output. The MCMC print method now includes warmup information.\nBetter display of unknown dimensions. Reshaping a greta array with dim&lt;- keeps the familiar ? placeholder for unknown values instead of showing NA.\nouter() works. outer() (and %o%) now works with greta arrays when FUN = \"*\", instead of silently returning a base array of NAs. Base R’s fast path for \"*\" used as.vector(), which dropped the greta operation.\nlog() warns about base. log() on a greta array now warns when the base argument is supplied, as it was being ignored.\nSilenceable notes. Notes are now emitted with message() rather than cat(), so you can wrap them in suppressMessages().\nAssorted fixes. as.unknowns() now handles plain numeric vectors, library(greta) no longer errors when the stored Python preference file exists but is empty, install_greta_deps() records where it put the greta-env-tf2 conda environment so greta can find it in any conda installation, and greta_sitrep() now requires Python 3.9 or later."
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#what-this-means-for-you",
+    "href": "posts/2026-07-greta-0-6-0/index.html#what-this-means-for-you",
+    "title": "greta 0.6.0",
+    "section": "What this means for you",
+    "text": "What this means for you\nIf you are a returning greta user: your models are safe and the API you know is intact. The biggest practical change is that getting greta running should be much less fuss than it used to be, and that mcmc() now runs two chains by default rather than four. If installation ever misbehaves, greta_sitrep() will tell you what greta sees and what it will do next.\nIf you are new to greta: welcome! You can install it straight from CRAN, and the Python side of things should sort itself out on first use.\ninstall.packages(\"greta\")\nlibrary(greta)"
+  },
+  {
+    "objectID": "posts/2026-07-greta-0-6-0/index.html#acknowledgements",
+    "href": "posts/2026-07-greta-0-6-0/index.html#acknowledgements",
+    "title": "greta 0.6.0",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nA big thank you to everyone who reported installation issues, tested pre-release builds, and waited patiently while greta found its way home. In particular, thank you to the folks whose pull requests and issue reports shaped this release:\n@adamhsparks, @AugustHao, @Entze, @geryan, @goldingn, @HenrikBengtsson, @hrlai, @t-kalinowski, and @yangchino1.\nIt is good to be back."
   },
   {
     "objectID": "posts/greta-tf-2/index.html",

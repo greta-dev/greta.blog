@@ -10,7 +10,342 @@
 <atom:link href="https://greta-dev.github.io/greta.blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>News, releases, and stories from the greta project — statistical modelling in R.</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 21 Jul 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 29 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>greta 0.6.0</title>
+  <dc:creator>Nicholas Tierney</dc:creator>
+  <link>https://greta-dev.github.io/greta.blog/posts/2026-07-greta-0-6-0/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled" title="A note on AI assistance">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A note on AI assistance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We are now using Claude Code, with the Opus and Fable models, to help resolve some long-standing issues in greta. We also used Claude Code to draft this post from the 0.6.0 <code>NEWS</code> file. It was then edited by greta’s maintainer, Nick Tierney.</p>
+</div>
+</div>
+<div class="lead">
+<p><strong>We are delighted to announce the release of greta 0.6.0.</strong> greta lets you write statistical models directly in R and fit them with MCMC, using TensorFlow and TensorFlow Probability to do the heavy lifting.</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta"</span>)</span></code></pre></div></div>
+<p>greta was archived from CRAN in late 2025, so the headline news is simply that it is back. Getting there meant rebuilding how greta manages its Python dependencies, which is the bulk of this release. You can see the full list of changes in the <a href="https://greta-dev.github.io/greta/news/index.html">release notes</a>.</p>
+<section id="the-short-version" class="level2">
+<h2 class="anchored" data-anchor-id="the-short-version">The short version</h2>
+<ul>
+<li>greta 0.6.0 is on CRAN again.</li>
+<li>The Python dependencies are now installed automatically via <a href="https://docs.astral.sh/uv/">uv</a> on first use, so <code>install_greta_deps()</code> is no longer a required step for most people.</li>
+<li>It works offline. Once uv’s cache is populated, greta can start up without an internet connection.</li>
+<li>You can choose your Python backend, persistently, with <code>greta_set_python()</code>, and pin your dependency versions with <code>greta_set_deps()</code>.</li>
+<li><code>mcmc()</code> now defaults to two chains on two cores, where it previously used four chains. If you relied on the old defaults, set them explicitly.</li>
+<li>A scattering of removal and reinstall helpers have been consolidated behind <code>greta_remove()</code> and <code>reinstall_greta_deps()</code>.</li>
+</ul>
+<p>Because greta is back, its three extension packages can return to CRAN too. <a href="https://greta-dev.github.io/greta.gp/">greta.gp</a> and <a href="https://greta-dev.github.io/greta.dynamics/">greta.dynamics</a> are already there, both at version 0.2.3, and <a href="https://github.com/greta-dev/greta.gam">greta.gam</a> is on its way.</p>
+</section>
+<section id="why-greta-was-archived" class="level2">
+<h2 class="anchored" data-anchor-id="why-greta-was-archived">Why greta was archived</h2>
+<p>greta sits on top of <a href="https://www.tensorflow.org/">TensorFlow</a> and <a href="https://www.tensorflow.org/probability">TensorFlow Probability</a>, which are Python libraries. You can think of them a little like highly optimised linear algebra engines: they are a big part of what makes greta fast and expressive, and they are how greta fits MCMC efficiently. But they also mean greta has to manage a Python installation, and getting the right combination of package versions in place has been a genuinely hard problem.</p>
+<p>That caused two problems on CRAN. greta used more than two cores by default, and it could reach out to install TensorFlow and TensorFlow Probability onto the machine running the checks. Both come back to the same underlying issue: managing greta’s Python dependencies well.</p>
+<p>Previously, we leaned on conda and a curated table of “known good” version combinations. The <code>install_greta_deps()</code> function did a good job of setting all of this up, most of the time. When it worked, it was lovely. When it did not, installation could get complicated quickly.</p>
+<p>More recently, <a href="https://rstudio.github.io/reticulate/">reticulate</a> gained a fast new environment manager built on uv, which changes what a good installation experience can look like. Rebuilding greta’s installation around it is the heart of this release.</p>
+</section>
+<section id="installation-that-just-works" class="level2">
+<h2 class="anchored" data-anchor-id="installation-that-just-works">Installation that just works</h2>
+<p>greta now installs TensorFlow and TensorFlow Probability automatically via uv the first time you use it. You no longer need to run <code>install_greta_deps()</code> as a separate step before you can build a model:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span>
+<span id="cb2-2"></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># on first use, greta sets up its Python environment for you</span></span>
+<span id="cb2-4">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">normal</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb2-5">m <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">model</span>(x)</span>
+<span id="cb2-6">draws <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mcmc</span>(m, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_samples =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)</span></code></pre></div></div>
+<p>Just as importantly, greta is now flexible about <em>which</em> Python environment it uses. Instead of always forcing one managed environment, greta resolves its backend in order:</p>
+<ol type="1">
+<li>a user-set <code>RETICULATE_PYTHON</code>,</li>
+<li>a stored greta preference (see below),</li>
+<li>an existing <code>greta-env-tf2</code> conda environment,</li>
+<li>otherwise, the managed uv environment.</li>
+</ol>
+<p>So you get convenience by default, without giving up control.</p>
+</section>
+<section id="choosing-your-python-backend" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-your-python-backend">Choosing your Python backend</h2>
+<p><code>greta_set_python()</code> records which Python environment greta should use, and the preference persists across sessions. You can pick the managed uv environment, a conda environment, or a specific Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the default: reticulate's managed uv environment</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_set_python</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"uv"</span>)</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># an existing conda environment</span></span>
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_set_python</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"conda"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">name =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta-env-tf2"</span>)</span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># a specific interpreter, or an environment directory</span></span>
+<span id="cb3-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_set_python</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"path"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">path =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~/.virtualenvs/greta/bin/python"</span>)</span>
+<span id="cb3-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_set_python</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"path"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">path =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~/.virtualenvs/greta"</span>)</span></code></pre></div></div>
+<p>That last pair is worth calling out: <code>greta_set_python("path", ...)</code> accepts either a Python binary or an environment directory (a virtualenv or conda prefix), looking for <code>bin/python</code> (or <code>Scripts/python.exe</code> on Windows) inside it. This makes pre-installed and offline setups easier to wire up.</p>
+<p>Each call reports the preference it stored, warns you if <code>RETICULATE_PYTHON</code> will take precedence over it, and shows what greta will resolve to on its next load. To clear the preference and go back to automatic resolution, use <code>greta_reset_python()</code>.</p>
+</section>
+<section id="offline-support" class="level2">
+<h2 class="anchored" data-anchor-id="offline-support">Offline support</h2>
+<p>The managed uv backend now works <strong>without an internet connection</strong>. Once reticulate’s uv cache is populated, greta enables uv’s offline mode, so it can start up on a plane, behind a locked-down corporate firewall, or on an air-gapped compute node.</p>
+<p>If you want to be explicit, set the <code>UV_OFFLINE</code> environment variable to force the behaviour you want:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># force offline resolution</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Sys.setenv</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">UV_OFFLINE =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb4-3"></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># force online resolution</span></span>
+<span id="cb4-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Sys.setenv</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">UV_OFFLINE =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span></code></pre></div></div>
+</section>
+<section id="pinning-your-dependency-versions" class="level2">
+<h2 class="anchored" data-anchor-id="pinning-your-dependency-versions">Pinning your dependency versions</h2>
+<p><code>greta_set_deps()</code> persistently pins which TensorFlow, TensorFlow Probability, and Python versions greta should use. The managed environment installs them on next load, and <code>install_greta_deps()</code> picks them up as its default:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_set_deps</span>(</span>
+<span id="cb5-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_deps_spec</span>(</span>
+<span id="cb5-3">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tf_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2.15.1"</span>,</span>
+<span id="cb5-4">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tfp_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.23.0"</span>,</span>
+<span id="cb5-5">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">python_version =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3.11"</span></span>
+<span id="cb5-6">  )</span>
+<span id="cb5-7">)</span></code></pre></div></div>
+<p>Clear the pins with <code>greta_remove("deps")</code>.</p>
+<p><code>greta_deps_spec()</code> is also less rigid than it used to be. It no longer validates every requested combination against a fixed compatibility table. It now checks only that the requested TensorFlow version is one greta supports, and leaves the rest for uv or conda to resolve. Fewer surprises, and less maintenance of a table that goes stale.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Two different TensorFlow versions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Two different TensorFlow versions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>greta depends on the R package tensorflow, and separately on the Python library TensorFlow. These are versioned independently, and 0.6.0 changed both.</p>
+<p>greta’s <code>DESCRIPTION</code> previously required the R package at exactly <code>== 2.16.0</code>, which is brittle by design; it now accepts <code>&gt;= 2.16.0</code>.</p>
+<p>The Python library is a different story: greta supports Python TensorFlow up to 2.15.x. TensorFlow 2.16 and later ship Keras 3, which greta does not yet support, so <code>greta_deps_spec(tf_version = "2.16.0")</code> will tell you so rather than installing something that will not work.</p>
+</div>
+</div>
+</section>
+<section id="seeing-what-greta-will-do" class="level2">
+<h2 class="anchored" data-anchor-id="seeing-what-greta-will-do">Seeing what greta will do</h2>
+<p><code>greta_sitrep()</code> has grown to match all of this. It reports the resolved Python backend and whether greta can start offline, including the <code>UV_OFFLINE</code> setting and whether the uv cache is populated, so you can see at a glance what greta will do on its next load. A missing conda environment is now reported neutrally as “not used” on the uv backend, rather than as a failure.</p>
+<p>It also gains a <code>verbosity</code> argument, with three levels of detail:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_sitrep</span>()                          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "minimal", the default</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_sitrep</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">verbosity =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"detailed"</span>)    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># everything</span></span>
+<span id="cb6-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_sitrep</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">verbosity =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"quiet"</span>)       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># just the essentials</span></span></code></pre></div></div>
+<p>If you are debugging a conda setup, <code>greta_list_py_modules()</code> shows the Python packages installed in a given TF2 environment.</p>
+</section>
+<section id="lifecycle-changes" class="level2">
+<h2 class="anchored" data-anchor-id="lifecycle-changes">Lifecycle changes</h2>
+<p>We consolidated a scattering of removal and reinstall helpers. <code>greta_remove()</code> is now the single front door for cleaning up. One <code>what</code> argument covers every case:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"env"</span>)         <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the greta-env-tf2 conda environment</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"miniconda"</span>)   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># miniconda</span></span>
+<span id="cb7-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"uv_cache"</span>)    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># reticulate's uv cache</span></span>
+<span id="cb7-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"preference"</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># your stored Python preference</span></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"deps"</span>)        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># your stored dependency versions</span></span>
+<span id="cb7-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">greta_remove</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"all"</span>)         <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># all of the above</span></span></code></pre></div></div>
+<ul>
+<li><strong>Superseded</strong> by <code>greta_remove()</code>: <code>destroy_greta_deps()</code>, <code>greta_remove_all_deps()</code>, <code>remove_greta_env()</code>, <code>remove_miniconda()</code>, and <code>remove_reticulate_uv_cache()</code>.</li>
+<li><strong>Deprecated</strong> in favour of <code>reinstall_greta_deps()</code>: <code>reinstall_greta_env()</code> and <code>reinstall_miniconda()</code>.</li>
+<li><strong>Behaviour change</strong>: <code>n_cores</code> now defaults to 2 and <code>chains</code> defaults to 2. If you ask for more cores than you have, greta uses what is actually available. This keeps greta polite on CRAN’s two-core check machines, and on laptops. If you were relying on the old default of four chains, pass <code>chains = 4</code> explicitly.</li>
+</ul>
+<p><code>greta_remove()</code> also no longer leaves a stale, deleted environment active for the rest of the session. It invalidates greta’s cached Python backend and nudges you to restart R, instead of silently failing or reporting the removed environment as still available. The older <code>remove_*()</code> functions now ask for confirmation before removing, gain an <code>ask</code> argument (defaulting to <code>interactive()</code>) so they work in scripts, and invisibly return whether anything was actually removed.</p>
+<p>One note on <code>remove_reticulate_uv_cache()</code>: that cache is shared by all reticulate packages and is not greta-specific. A system-wide uv cache is left untouched.</p>
+</section>
+<section id="other-changes" class="level2">
+<h2 class="anchored" data-anchor-id="other-changes">Other changes</h2>
+<p>A few smaller things make everyday modelling nicer:</p>
+<ul>
+<li><strong>Clearer MCMC output.</strong> The MCMC print method now includes warmup information.</li>
+<li><strong>Better display of unknown dimensions.</strong> Reshaping a greta array with <code>dim&lt;-</code> keeps the familiar <code>?</code> placeholder for unknown values instead of showing <code>NA</code>.</li>
+<li><strong><code>outer()</code> works.</strong> <code>outer()</code> (and <code>%o%</code>) now works with greta arrays when <code>FUN = "*"</code>, instead of silently returning a base array of <code>NA</code>s. Base R’s fast path for <code>"*"</code> used <code>as.vector()</code>, which dropped the greta operation.</li>
+<li><strong><code>log()</code> warns about <code>base</code>.</strong> <code>log()</code> on a greta array now warns when the <code>base</code> argument is supplied, as it was being ignored.</li>
+<li><strong>Silenceable notes.</strong> Notes are now emitted with <code>message()</code> rather than <code>cat()</code>, so you can wrap them in <code>suppressMessages()</code>.</li>
+<li><strong>Assorted fixes.</strong> <code>as.unknowns()</code> now handles plain numeric vectors, <code>library(greta)</code> no longer errors when the stored Python preference file exists but is empty, <code>install_greta_deps()</code> records where it put the <code>greta-env-tf2</code> conda environment so greta can find it in any conda installation, and <code>greta_sitrep()</code> now requires Python 3.9 or later.</li>
+</ul>
+</section>
+<section id="what-this-means-for-you" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-means-for-you">What this means for you</h2>
+<p>If you are a returning greta user: your models are safe and the API you know is intact. The biggest practical change is that getting greta running should be much less fuss than it used to be, and that <code>mcmc()</code> now runs two chains by default rather than four. If installation ever misbehaves, <code>greta_sitrep()</code> will tell you what greta sees and what it will do next.</p>
+<p>If you are new to greta: welcome! You can install it straight from CRAN, and the Python side of things should sort itself out on first use.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"greta"</span>)</span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(greta)</span></code></pre></div></div>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>A big thank you to everyone who reported installation issues, tested pre-release builds, and waited patiently while greta found its way home. In particular, thank you to the folks whose pull requests and issue reports shaped this release:</p>
+<p><a href="https://github.com/adamhsparks">@adamhsparks</a>, <a href="https://github.com/AugustHao">@AugustHao</a>, <a href="https://github.com/Entze">@Entze</a>, <a href="https://github.com/geryan">@geryan</a>, <a href="https://github.com/goldingn">@goldingn</a>, <a href="https://github.com/HenrikBengtsson">@HenrikBengtsson</a>, <a href="https://github.com/hrlai">@hrlai</a>, <a href="https://github.com/t-kalinowski">@t-kalinowski</a>, and <a href="https://github.com/yangchino1">@yangchino1</a>.</p>
+<p>It is good to be back.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>greta</category>
+  <category>release</category>
+  <guid>https://greta-dev.github.io/greta.blog/posts/2026-07-greta-0-6-0/</guid>
+  <pubDate>Wed, 29 Jul 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://greta-dev.github.io/greta.blog/posts/2026-07-greta-0-6-0/greta-hex.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
 <item>
   <title>greta.dynamics 0.2.3</title>
   <dc:creator>Nicholas Tierney</dc:creator>
